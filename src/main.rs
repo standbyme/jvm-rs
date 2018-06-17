@@ -9,5 +9,6 @@ fn main() {
     let input: File = File::open(path).unwrap();
     let bytes: Vec<u8> = input.bytes().map(|x| x.unwrap()).collect();
     let (_, after_magic) = bytes.read_and_check_magic();
-    println!("{:?}", after_magic);
+    let (version_info, _) = after_magic.read_and_check_version();
+    println!("{:?}", version_info);
 }
