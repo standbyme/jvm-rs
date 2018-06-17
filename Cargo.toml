@@ -1,0 +1,6 @@
+[package]
+name = "jvm-rs"
+version = "0.1.0"
+authors = ["StandbyMe <stand-by-me@mail.com>"]
+
+[dependencies]
