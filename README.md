@@ -1,5 +1,8 @@
 # jvm-rs
-A JVM written in Rust.
+A JVM on Rust.
+Strive to achieve a very clear structure.
+Now it's just started and only has little code so it's very easy to understand and follow.
+Welcome Star : )
 
 # Introduction
 jvm-rs is a toy JVM (which is far from complete) programmed in Rust inspired by [jvm.go](https://github.com/zxh0/jvm.go). The main purpose of this project is learning Rust and the JVM. So the number one goal of the project is readability of code. The basic idea is to just implement the core JVM, and use `rt.jar` (from OpenJDK) as its class library.
