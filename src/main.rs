@@ -2,7 +2,7 @@ mod classfile;
 
 use std::fs::File;
 use std::io::prelude::*;
-use classfile::ClassReader;
+use classfile::class_reader::ClassReader;
 
 fn main() {
     let path: &str = "Object.class";
