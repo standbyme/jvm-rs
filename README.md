@@ -1,4 +1,6 @@
 # jvm-rs
+[![Build Status](https://travis-ci.org/standbyme/jvm-rs.svg?branch=master)](https://travis-ci.org/standbyme/jvm-rs)
+
 A JVM on Rust.
 Strive to achieve a very clear structure.
 Now it's just started and only has little code so it's very easy to understand and follow.
