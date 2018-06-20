@@ -3,8 +3,11 @@ extern crate byteorder;
 use self::byteorder::{ByteOrder, BigEndian};
 use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
+use classfile::attribute_info::AttributeInfo;
 use util::modified_utf8::from_modified_utf8;
 use vec_map::VecMap;
+use classfile::attribute_info::{ExceptionTableEntry, CodeAttributeInfo};
+use classfile::member_info::MemberInfo;
 
 const CONSTANT_UTF8: u8 = 1;
 const CONSTANT_INTEGER: u8 = 3;
@@ -23,9 +26,16 @@ const CONSTANT_INVOKE_DYNAMI: u8 = 18;
 
 #[derive(Debug)]
 pub struct ClassFile {
-    major_version: u16,
-    minor_version: u16,
-    constant_pool: ConstantPool,
+    pub major_version: u16,
+    pub minor_version: u16,
+    pub constant_pool: ConstantPool,
+    pub access_flags: u16,
+    pub this_class: u16,
+    pub super_class: u16,
+    pub interfaces: Vec<u16>,
+    pub fields: Vec<MemberInfo>,
+    pub methods: Vec<MemberInfo>,
+    pub attributes: Vec<AttributeInfo>,
 }
 
 #[derive(Debug)]
@@ -37,6 +47,7 @@ pub struct VersionInfo {
 pub trait ClassReader {
     fn read_u8(&self) -> (u8, &[u8]);
     fn read_u16(&self) -> (u16, &[u8]);
+    fn read_u16s(&self) -> (Vec<u16>, &[u8]);
     fn read_u32(&self) -> (u32, &[u8]);
     fn read_i32(&self) -> (i32, &[u8]);
     fn read_f32(&self) -> (f32, &[u8]);
@@ -45,8 +56,17 @@ pub trait ClassReader {
     fn read_bytes(&self, n: usize) -> (&[u8], &[u8]);
     fn read_and_check_magic(&self) -> (u32, &[u8]);
     fn read_and_check_version(&self) -> (VersionInfo, &[u8]);
-    fn read_constant_info(&self, constant_pool: &ConstantPool) -> (ConstantInfo, &[u8]);
+    fn read_constant_info(&self) -> (ConstantInfo, &[u8]);
     fn read_constant_pool(&self) -> (ConstantPool, &[u8]);
+    fn read_access_flags(&self) -> (u16, &[u8]);
+    fn read_this_class(&self) -> (u16, &[u8]);
+    fn read_super_class(&self) -> (u16, &[u8]);
+    fn read_interfaces(&self) -> (Vec<u16>, &[u8]);
+    fn read_member(&self, constant_pool: &ConstantPool) -> (MemberInfo, &[u8]);
+    fn read_members(&self, constant_pool: &ConstantPool) -> (Vec<MemberInfo>, &[u8]);
+    fn read_exception_table(&self) -> (Vec<ExceptionTableEntry>, &[u8]);
+    fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]);
+    fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]);
     fn parse(&self) -> ClassFile;
 }
 
@@ -59,6 +79,18 @@ impl ClassReader for [u8] {
     fn read_u16(&self) -> (u16, &[u8]) {
         let (a, b) = self.split_at(2);
         (BigEndian::read_u16(a), b)
+    }
+
+    fn read_u16s(&self) -> (Vec<u16>, &[u8]) {
+        let (n, after_n) = self.read_u16();
+        let mut s: Vec<u16> = Vec::with_capacity(n as usize);
+        let mut rest = after_n;
+        for _ in 1..=n {
+            let (value, next_rest) = rest.read_u16();
+            s.push(value);
+            rest = next_rest;
+        }
+        (s, rest)
     }
 
     fn read_u32(&self) -> (u32, &[u8]) {
@@ -109,7 +141,7 @@ impl ClassReader for [u8] {
         (version_info, after_major_version)
     }
 
-    fn read_constant_info(&self, constant_pool: &ConstantPool) -> (ConstantInfo, &[u8]) {
+    fn read_constant_info(&self) -> (ConstantInfo, &[u8]) {
         let (tag, after_tag) = self.read_u8();
         match tag {
             CONSTANT_INTEGER => {
@@ -170,13 +202,13 @@ impl ClassReader for [u8] {
 
     fn read_constant_pool(&self) -> (ConstantPool, &[u8]) {
         let (count, after_count) = self.read_u16();
-        let mut constant_pool: VecMap<ConstantInfo> = VecMap::with_capacity(count as usize);
+        let mut constant_pool: VecMap<ConstantInfo> = VecMap::with_capacity((count + 1) as usize);
 
         let mut i: usize = 1;
         let mut rest: &[u8] = after_count;
 
         while i < (count as usize) {
-            let (constant_info, next_rest) = rest.read_constant_info(&constant_pool);
+            let (constant_info, next_rest) = rest.read_constant_info();
             rest = next_rest;
             let add = match constant_info {
                 ConstantInfo::Long(_) | ConstantInfo::Double(_) => 2,
@@ -189,15 +221,137 @@ impl ClassReader for [u8] {
         (constant_pool, rest)
     }
 
+    fn read_access_flags(&self) -> (u16, &[u8]) {
+        self.read_u16()
+    }
+
+    fn read_this_class(&self) -> (u16, &[u8]) {
+        self.read_u16()
+    }
+
+    fn read_super_class(&self) -> (u16, &[u8]) {
+        self.read_u16()
+    }
+
+    fn read_interfaces(&self) -> (Vec<u16>, &[u8]) {
+        self.read_u16s()
+    }
+
+    fn read_member(&self, constant_pool: &ConstantPool) -> (MemberInfo, &[u8]) {
+        let (access_flags, after_access_flags) = self.read_u16();
+        let (name_index, after_name_index) = after_access_flags.read_u16();
+        let (descriptor_index, after_descriptor_index) = after_name_index.read_u16();
+        let (attributes, after_attributes) = after_descriptor_index.read_attributes(constant_pool);
+        let member_info = MemberInfo { access_flags, name_index, descriptor_index, attributes };
+        (member_info, after_attributes)
+    }
+
+    fn read_members(&self, constant_pool: &ConstantPool) -> (Vec<MemberInfo>, &[u8]) {
+        let (count, after_count) = self.read_u16();
+
+        let mut members: Vec<MemberInfo> = Vec::with_capacity(count as usize);
+        let mut rest = after_count;
+
+        for _ in 1..=count {
+            let (member, after_member) = rest.read_member(constant_pool);
+            members.push(member);
+            rest = after_member;
+        }
+
+        (members, rest)
+    }
+
+    fn read_exception_table(&self) -> (Vec<ExceptionTableEntry>, &[u8]) {
+        let (exception_table_length, after_exception_table_length) = self.read_u16();
+        let mut exception_table: Vec<ExceptionTableEntry> = Vec::with_capacity(exception_table_length as usize);
+        let mut rest = after_exception_table_length;
+        for _ in 1..=exception_table_length {
+            let (start_pc, after_start_pc) = rest.read_u16();
+            let (end_pc, after_end_pc) = after_start_pc.read_u16();
+            let (handler_pc, after_handler_pc) = after_end_pc.read_u16();
+            let (catch_type, after_catch_type) = after_handler_pc.read_u16();
+            let exception_table_entry = ExceptionTableEntry { start_pc, end_pc, handler_pc, catch_type };
+            exception_table.push(exception_table_entry);
+            rest = after_catch_type;
+        }
+        (exception_table, rest)
+    }
+
+    fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
+        let (attribute_name_index, after_attribute_name_index) = self.read_u16();
+        let attribute_name = match constant_pool.get(attribute_name_index as usize).unwrap() {
+            ConstantInfo::UTF8(attribute_name) => attribute_name,
+            _ => panic!("attribute_name isn't UTF8")
+        };
+        let (attribute_length, after_attribute_length) = after_attribute_name_index.read_u32();
+
+        match attribute_name.as_str() {
+            "Code" => {
+                let (max_stack, after_max_stack) = after_attribute_length.read_u16();
+                let (max_locals, after_max_locals) = after_max_stack.read_u16();
+                let (code_length, after_code_length) = after_max_locals.read_u32();
+                let (code, after_code) = after_code_length.read_bytes(code_length as usize);
+                let (exception_table, after_exception_table) = after_code.read_exception_table();
+                let (attributes, after_attributes) = after_exception_table.read_attributes(constant_pool);
+                let code_attribute_info = CodeAttributeInfo { max_stack, max_locals, code: code.to_vec(), exception_table, attributes };
+                (AttributeInfo::Code(code_attribute_info), after_attributes)
+            }
+            "ConstantValue" => {
+                let (constantvalue_index, after_constantvalue_index) = after_attribute_length.read_u16();
+                (AttributeInfo::ConstantValue(constantvalue_index), after_constantvalue_index)
+            }
+            "Deprecated" => (AttributeInfo::Deprecated, after_attribute_length),
+            "Exceptions" => {
+                let (exception_index_table, after_exception_index_table) = after_attribute_length.read_u16s();
+                (AttributeInfo::Exceptions(exception_index_table), after_exception_index_table)
+            }
+            "SourceFile" => {
+                let (sourcefile_index, after_sourcefile_index) = after_attribute_length.read_u16();
+                (AttributeInfo::SourceFile(sourcefile_index), after_sourcefile_index)
+            }
+            "Synthetic" => (AttributeInfo::Synthetic, after_attribute_length),
+            _ => {
+                let (_, after_attribute_info) = after_attribute_length.read_bytes(attribute_length as usize);
+                (AttributeInfo::Unparsed(attribute_name.to_string(), attribute_length), after_attribute_info)
+            }
+        }
+    }
+
+    fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]) {
+        let (attributes_count, after_attributes_count) = self.read_u16();
+        let mut attributes: Vec<AttributeInfo> = Vec::with_capacity(attributes_count as usize);
+        let mut rest = after_attributes_count;
+        for _ in 1..=attributes_count {
+            let (attribute_info, next_rest) = rest.read_attribute(constant_pool);
+            attributes.push(attribute_info);
+            rest = next_rest;
+        }
+        (attributes, rest)
+    }
+
     fn parse(&self) -> ClassFile {
         let (_, after_magic) = self.read_and_check_magic();
         let (version_info, after_version_info) = after_magic.read_and_check_version();
         let VersionInfo { major_version, minor_version } = version_info;
-        let (constant_pool, _) = after_version_info.read_constant_pool();
+        let (constant_pool, after_constant_pool) = after_version_info.read_constant_pool();
+        let (access_flags, after_access_flags) = after_constant_pool.read_access_flags();
+        let (this_class, after_this_class) = after_access_flags.read_this_class();
+        let (super_class, after_super_class) = after_this_class.read_this_class();
+        let (interfaces, after_interfaces) = after_super_class.read_interfaces();
+        let (fields, after_fields) = after_interfaces.read_members(&constant_pool);
+        let (methods, after_methods) = after_fields.read_members(&constant_pool);
+        let (attributes, after_attributes) = after_methods.read_attributes(&constant_pool);
         ClassFile {
             major_version,
             minor_version,
             constant_pool,
+            access_flags,
+            this_class,
+            super_class,
+            interfaces,
+            fields,
+            methods,
+            attributes,
         }
     }
 }

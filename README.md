@@ -3,7 +3,12 @@
 [![codecov](https://codecov.io/gh/standbyme/jvm-rs/branch/master/graph/badge.svg)](https://codecov.io/gh/standbyme/jvm-rs)
 
 A JVM on Rust.
+
 Strive to achieve a very clear structure.
+
+- Minimal(or No) Unsafe
+- Minimal Mutable
+
 Now it's just started and only has little code so it's very easy to understand and follow.
 Welcome Star : )
 
