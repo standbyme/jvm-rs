@@ -18,13 +18,14 @@ pub struct CodeAttributeInfo {
 #[derive(Debug)]
 pub enum AttributeInfo {
     Code(CodeAttributeInfo),
-    // constantvalue_index
+    // AttributeInfo::ConstantValue(constantvalue_index)
     ConstantValue(u16),
     Deprecated,
-    // exception_index_table
+    // AttributeInfo::Exceptions(exception_index_table)
     Exceptions(Vec<u16>),
-    // sourcefile_index
+    // AttributeInfo::SourceFile(sourcefile_index)
     SourceFile(u16),
     Synthetic,
-    Unparsed(String, u32),
+    // AttributeInfo::Unparsed(attribute_name, attribute_length)
+    Unparsed(String, u32)
 }
