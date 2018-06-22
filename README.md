@@ -23,9 +23,6 @@ jvm-rs is a toy JVM (which is far from complete) programmed in Rust inspired by 
 Ensure your Java version is 1.8.0_172 and JAVA_HOME env was set
 ```sh
 git clone https://github.com/standbyme/jvm-rs.git
-```
-**Open JAVA_HOME/jre/lib/rt.jar and Copy rt/java/lang/Object.class to jvm-rs**
-```sh
 cd jvm-rs
-cargo run
+cargo test
 ```
