@@ -1,5 +1,5 @@
 # jvm-rs
-[![Build Status](https://travis-ci.org/standbyme/jvm-rs.svg?branch=master)](https://travis-ci.org/standbyme/jvm-rs)
+[![Linux Build Status](https://img.shields.io/travis/standbyme/jvm-rs/master.svg?label=Linux%20build)](https://travis-ci.org/standbyme/jvm-rs)
 
 A JVM on Rust.
 
