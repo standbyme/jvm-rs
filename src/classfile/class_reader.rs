@@ -1,13 +1,15 @@
 extern crate byteorder;
 
 use self::byteorder::{ByteOrder, BigEndian};
+use classfile::attribute_info;
+use classfile::attribute_info::ExceptionTableEntry;
 use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
-use classfile::attribute_info::AttributeInfo;
+use classfile::member_info::MemberInfo;
 use util::modified_utf8::from_modified_utf8;
 use vec_map::VecMap;
-use classfile::attribute_info::{ExceptionTableEntry, CodeAttributeInfo};
-use classfile::member_info::MemberInfo;
+use classfile::attribute_info::AttributeInfo;
+
 
 const CONSTANT_UTF8: u8 = 1;
 const CONSTANT_INTEGER: u8 = 3;
@@ -20,9 +22,6 @@ const CONSTANT_FIELDREF: u8 = 9;
 const CONSTANT_METHODREF: u8 = 10;
 const CONSTANT_INTERFACE_METHODREF: u8 = 11;
 const CONSTANT_NAME_AND_TYPE: u8 = 12;
-const CONSTANT_METHOD_HANDLE: u8 = 15;
-const CONSTANT_METHOD_TYPE: u8 = 16;
-const CONSTANT_INVOKE_DYNAMI: u8 = 18;
 
 #[derive(Debug)]
 pub struct ClassFile {
@@ -35,7 +34,7 @@ pub struct ClassFile {
     pub interfaces: Vec<u16>,
     pub fields: Vec<MemberInfo>,
     pub methods: Vec<MemberInfo>,
-    pub attributes: Vec<AttributeInfo>,
+    pub attributes: Vec<Box<dyn AttributeInfo>>,
 }
 
 #[derive(Debug)]
@@ -65,8 +64,8 @@ pub trait ClassReader {
     fn read_member(&self, constant_pool: &ConstantPool) -> (MemberInfo, &[u8]);
     fn read_members(&self, constant_pool: &ConstantPool) -> (Vec<MemberInfo>, &[u8]);
     fn read_exception_table(&self) -> (Vec<ExceptionTableEntry>, &[u8]);
-    fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]);
-    fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]);
+    fn read_attribute(&self, constant_pool: &ConstantPool) -> (Box<dyn AttributeInfo>, &[u8]);
+    fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<Box<dyn AttributeInfo>>, &[u8]);
     fn parse(&self) -> ClassFile;
 }
 
@@ -277,7 +276,7 @@ impl ClassReader for [u8] {
         (exception_table, rest)
     }
 
-    fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
+    fn read_attribute(&self, constant_pool: &ConstantPool) -> (Box<dyn AttributeInfo>, &[u8]) {
         let (attribute_name_index, after_attribute_name_index) = self.read_u16();
         let attribute_name = match constant_pool.get(attribute_name_index as usize).unwrap() {
             ConstantInfo::UTF8(attribute_name) => attribute_name,
@@ -293,33 +292,34 @@ impl ClassReader for [u8] {
                 let (code, after_code) = after_code_length.read_bytes(code_length as usize);
                 let (exception_table, after_exception_table) = after_code.read_exception_table();
                 let (attributes, after_attributes) = after_exception_table.read_attributes(constant_pool);
-                let code_attribute_info = CodeAttributeInfo { max_stack, max_locals, code: code.to_vec(), exception_table, attributes };
-                (AttributeInfo::Code(code_attribute_info), after_attributes)
+
+                (Box::new(attribute_info::Code { max_stack, max_locals, code: code.to_vec(), exception_table, attributes }), after_attributes)
             }
             "ConstantValue" => {
                 let (constantvalue_index, after_constantvalue_index) = after_attribute_length.read_u16();
-                (AttributeInfo::ConstantValue(constantvalue_index), after_constantvalue_index)
+                (Box::new(attribute_info::ConstantValue { constantvalue_index }), after_constantvalue_index)
             }
-            "Deprecated" => (AttributeInfo::Deprecated, after_attribute_length),
+            "Deprecated" => (Box::new(attribute_info::Deprecated {}), after_attribute_length),
             "Exceptions" => {
                 let (exception_index_table, after_exception_index_table) = after_attribute_length.read_u16s();
-                (AttributeInfo::Exceptions(exception_index_table), after_exception_index_table)
+                (Box::new(attribute_info::Exceptions { exception_index_table }), after_exception_index_table)
             }
             "SourceFile" => {
                 let (sourcefile_index, after_sourcefile_index) = after_attribute_length.read_u16();
-                (AttributeInfo::SourceFile(sourcefile_index), after_sourcefile_index)
+                (Box::new(attribute_info::SourceFile { sourcefile_index }), after_sourcefile_index)
             }
-            "Synthetic" => (AttributeInfo::Synthetic, after_attribute_length),
+            "Synthetic" => (Box::new(attribute_info::Synthetic {}), after_attribute_length),
             _ => {
                 let (_, after_attribute_info) = after_attribute_length.read_bytes(attribute_length as usize);
-                (AttributeInfo::Unparsed(attribute_name.to_string(), attribute_length), after_attribute_info)
+                let attribute_name = attribute_name.to_string();
+                (Box::new(attribute_info::Unparsed { attribute_name, attribute_length }), after_attribute_info)
             }
         }
     }
 
-    fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]) {
+    fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<Box<dyn AttributeInfo>>, &[u8]) {
         let (attributes_count, after_attributes_count) = self.read_u16();
-        let mut attributes: Vec<AttributeInfo> = Vec::with_capacity(attributes_count as usize);
+        let mut attributes: Vec<Box<dyn AttributeInfo>> = Vec::with_capacity(attributes_count as usize);
         let mut rest = after_attributes_count;
         for _ in 1..=attributes_count {
             let (attribute_info, next_rest) = rest.read_attribute(constant_pool);
@@ -340,7 +340,7 @@ impl ClassReader for [u8] {
         let (interfaces, after_interfaces) = after_super_class.read_interfaces();
         let (fields, after_fields) = after_interfaces.read_members(&constant_pool);
         let (methods, after_methods) = after_fields.read_members(&constant_pool);
-        let (attributes, after_attributes) = after_methods.read_attributes(&constant_pool);
+        let (attributes, _) = after_methods.read_attributes(&constant_pool);
         ClassFile {
             major_version,
             minor_version,
