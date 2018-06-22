@@ -7,12 +7,20 @@ pub enum ConstantInfo {
     UTF8(String),
     String(u16),
     Class(u16),
-    // ConstantInfo::NameAndType(name_index, descriptor_index)
-    NameAndType(u16, u16),
-    // ConstantInfo::FieldRef(class_index, name_and_type_index)
-    FieldRef(u16,u16),
-    // ConstantInfo::MethodRef(class_index, name_and_type_index)
-    MethodRef(u16,u16),
-    // ConstantInfo::InterfaceMethodRef(class_index, name_and_type_index)
-    InterfaceMethodRef(u16,u16)
+    NameAndType {
+        name_index: u16,
+        descriptor_index: u16,
+    },
+    FieldRef {
+        class_index: u16,
+        name_and_type_index: u16,
+    },
+    MethodRef {
+        class_index: u16,
+        name_and_type_index: u16,
+    },
+    InterfaceMethodRef {
+        class_index: u16,
+        name_and_type_index: u16,
+    },
 }

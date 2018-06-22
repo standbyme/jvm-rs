@@ -178,22 +178,22 @@ impl ClassReader for [u8] {
             CONSTANT_NAME_AND_TYPE => {
                 let (name_index, after_name_index) = after_tag.read_u16();
                 let (descriptor_index, rest) = after_name_index.read_u16();
-                (ConstantInfo::NameAndType(name_index, descriptor_index), rest)
+                (ConstantInfo::NameAndType { name_index, descriptor_index }, rest)
             }
             CONSTANT_FIELDREF => {
                 let (class_index, after_class_index) = after_tag.read_u16();
                 let (name_and_type_index, rest) = after_class_index.read_u16();
-                (ConstantInfo::FieldRef(class_index, name_and_type_index), rest)
+                (ConstantInfo::FieldRef { class_index, name_and_type_index }, rest)
             }
             CONSTANT_METHODREF => {
                 let (class_index, after_class_index) = after_tag.read_u16();
                 let (name_and_type_index, rest) = after_class_index.read_u16();
-                (ConstantInfo::MethodRef(class_index, name_and_type_index), rest)
+                (ConstantInfo::MethodRef { class_index, name_and_type_index }, rest)
             }
             CONSTANT_INTERFACE_METHODREF => {
                 let (class_index, after_class_index) = after_tag.read_u16();
                 let (name_and_type_index, rest) = after_class_index.read_u16();
-                (ConstantInfo::InterfaceMethodRef(class_index, name_and_type_index), rest)
+                (ConstantInfo::InterfaceMethodRef { class_index, name_and_type_index }, rest)
             }
             _ => {
                 panic!("Wrong tag type");
@@ -386,6 +386,6 @@ mod tests {
         assert_eq!(minor_version, 0);
         assert_eq!(access_flags, 33);
         assert_eq!(this_class, 17);
-        assert_eq!(super_class,0);
+        assert_eq!(super_class, 0);
     }
 }
