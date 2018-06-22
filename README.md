@@ -19,7 +19,7 @@ jvm-rs is a toy JVM (which is far from complete) programmed in Rust inspired by 
 # My dev environment
   * Ubuntu 18.04
   * Java 1.8.0_172
-  * Rust 1.26.1
+  * Rust 1.27.0
 
 # Get and Build jvm-rs
 Ensure your Java version is 1.8.0_172 and JAVA_HOME env was set
