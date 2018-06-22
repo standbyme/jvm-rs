@@ -171,8 +171,8 @@ impl ClassReader for [u8] {
                 (ConstantInfo::String(val), rest)
             }
             CONSTANT_CLASS => {
-                let (val, rest) = after_tag.read_u16();
-                (ConstantInfo::Class(val), rest)
+                let (name_index, rest) = after_tag.read_u16();
+                (ConstantInfo::Class { name_index }, rest)
             }
             CONSTANT_NAME_AND_TYPE => {
                 let (name_index, after_name_index) = after_tag.read_u16();
@@ -363,9 +363,13 @@ mod tests {
     use classfile::class_reader::ClassReader;
     use std::fs::File;
     use std::io::Read;
+    use classfile::constant_info::ConstantInfo;
+    use classfile::member_info::MemberInfo;
+    use classfile::attribute_info::AttributeInfo;
 
     #[test]
     fn parse() {
+        // todo: assert access_flags
         let path: &str = "src/test_data/Object.class";
         let input = File::open(path).unwrap();
         let bytes: Vec<u8> = input.bytes().map(|x| x.unwrap()).collect();
@@ -383,8 +387,91 @@ mod tests {
         } = bytes.parse();
         assert_eq!(major_version, 52);
         assert_eq!(minor_version, 0);
+        assert_eq!(constant_pool.capacity(), 79);
+        match constant_pool.get(1).unwrap() {
+            ConstantInfo::Class { name_index } => assert_eq!(name_index.to_owned(), 49 as u16),
+            _ => panic!()
+        };
+        match constant_pool.get(9).unwrap() {
+            ConstantInfo::MethodRef { class_index, name_and_type_index } => {
+                assert_eq!(class_index.to_owned(), 1 as u16);
+                assert_eq!(name_and_type_index.to_owned(), 59 as u16);
+            }
+            _ => panic!()
+        };
+        match constant_pool.get(13).unwrap() {
+            ConstantInfo::Integer(value) => assert_eq!(value.to_owned(), 999999 as i32),
+            _ => panic!()
+        };
+        match constant_pool.get(22).unwrap() {
+            ConstantInfo::UTF8(value) => assert_eq!(value, "registerNatives"),
+            _ => panic!()
+        };
+        match constant_pool.get(50).unwrap() {
+            ConstantInfo::NameAndType { name_index, descriptor_index } => {
+                assert_eq!(name_index.to_owned(), 18 as u16);
+                assert_eq!(descriptor_index.to_owned(), 19 as u16);
+            }
+            _ => panic!()
+        };
+        match constant_pool.get(77).unwrap() {
+            ConstantInfo::UTF8(value) => assert_eq!(value, "(Ljava/lang/String;)V"),
+            _ => panic!()
+        };
         assert_eq!(access_flags, 33);
         assert_eq!(this_class, 17);
         assert_eq!(super_class, 0);
+        assert_eq!(interfaces.len(), 0);
+        assert_eq!(fields.len(), 0);
+        assert_eq!(methods.len(), 14);
+        match methods.get(2).unwrap() {
+            MemberInfo {
+                name_index,
+                descriptor_index,
+                attributes,
+                access_flags: _
+            } => {
+                assert_eq!(name_index.to_owned(), 23 as u16);
+                assert_eq!(descriptor_index.to_owned(), 24 as u16);
+                assert_eq!(attributes.len(), 1 as usize);
+            }
+        }
+        match methods.get(13).unwrap() {
+            MemberInfo {
+                name_index,
+                descriptor_index,
+                attributes,
+                access_flags: _
+            } => {
+                assert_eq!(name_index.to_owned(), 46 as u16);
+                assert_eq!(descriptor_index.to_owned(), 19 as u16);
+                assert_eq!(attributes.len(), 1 as usize);
+                match attributes.get(0).unwrap() {
+                    AttributeInfo::Code {
+                        max_stack,
+                        max_locals,
+                        code,
+                        exception_table,
+                        attributes
+                    } => {
+                        assert_eq!(max_stack.to_owned(), 0 as u16);
+                        assert_eq!(max_locals.to_owned(), 0 as u16);
+                        assert_eq!(code.len(), 4 as usize);
+                        assert_eq!(exception_table.len(), 0 as usize);
+                        assert_eq!(attributes.len(), 1 as usize);
+                    }
+                    _ => panic!()
+                }
+            }
+        }
+        assert_eq!(attributes.len(), 1);
+        match attributes.get(0).unwrap() {
+            AttributeInfo::SourceFile {
+                sourcefile_index
+            } => {
+                assert_eq!(sourcefile_index.to_owned(), 48 as u16);
+            }
+            _ => panic!()
+        }
     }
 }

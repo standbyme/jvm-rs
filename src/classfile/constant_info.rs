@@ -6,7 +6,9 @@ pub enum ConstantInfo {
     Double(f64),
     UTF8(String),
     String(u16),
-    Class(u16),
+    Class {
+        name_index: u16,
+    },
     NameAndType {
         name_index: u16,
         descriptor_index: u16,
