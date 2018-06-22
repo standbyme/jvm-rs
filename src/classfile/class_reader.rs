@@ -1,14 +1,16 @@
 extern crate byteorder;
+extern crate vec_map;
 
 use self::byteorder::{ByteOrder, BigEndian};
+use self::vec_map::VecMap;
+
 use classfile::attribute_info;
 use classfile::attribute_info::ExceptionTableEntry;
 use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
-use util::modified_utf8::from_modified_utf8;
-use vec_map::VecMap;
 use classfile::attribute_info::AttributeInfo;
+use util::modified_utf8::from_modified_utf8;
 
 
 const CONSTANT_UTF8: u8 = 1;
@@ -353,5 +355,37 @@ impl ClassReader for [u8] {
             methods,
             attributes,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use classfile::class_reader::ClassFile;
+    use classfile::class_reader::ClassReader;
+    use std::fs::File;
+    use std::io::Read;
+
+    #[test]
+    fn parse() {
+        let path: &str = "src/test_data/Object.class";
+        let input = File::open(path).unwrap();
+        let bytes: Vec<u8> = input.bytes().map(|x| x.unwrap()).collect();
+        let ClassFile {
+            major_version,
+            minor_version,
+            constant_pool,
+            access_flags,
+            this_class,
+            super_class,
+            interfaces,
+            fields,
+            methods,
+            attributes,
+        } = bytes.parse();
+        assert_eq!(major_version, 52);
+        assert_eq!(minor_version, 0);
+        assert_eq!(access_flags, 33);
+        assert_eq!(this_class, 17);
+        assert_eq!(super_class,0);
     }
 }

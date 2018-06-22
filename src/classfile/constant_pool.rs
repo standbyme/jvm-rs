@@ -1,4 +1,7 @@
+extern crate vec_map;
+
+use self::vec_map::VecMap;
+
 use classfile::constant_info::ConstantInfo;
-use vec_map::VecMap;
 
 pub type ConstantPool = VecMap<ConstantInfo>;
