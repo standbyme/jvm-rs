@@ -8,6 +8,7 @@ Strive to achieve
 - Well **tested**
 - Minimal(or No) Unsafe
 - Minimal Mutable
+- Functional Programming
 
 Now it is able to parse ClassFile and it's very easy to understand and follow.
 
