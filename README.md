@@ -1,14 +1,16 @@
 # jvm-rs
 [![Linux Build Status](https://img.shields.io/travis/standbyme/jvm-rs/master.svg?label=Linux%20build)](https://travis-ci.org/standbyme/jvm-rs)
 
-A JVM on Rust.
+A JVM on Rust under development.
 
-Strive to achieve a very clear structure.
+Strive to achieve 
+- **Clear** structure.
+- Well **tested**
+- Minimal(or No) Unsafe
+- Minimal Mutable
 
-- **Minimal(or No) Unsafe**
-- **Minimal Mutable**
+Now it is able to parse ClassFile and it's very easy to understand and follow.
 
-Now it's just started and only has little code so it's very easy to understand and follow.
 Welcome Star : )
 
 # Introduction
