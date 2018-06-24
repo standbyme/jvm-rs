@@ -15,3 +15,13 @@ pub struct ClassFile {
     pub methods: Vec<MemberInfo>,
     pub attributes: Vec<AttributeInfo>,
 }
+
+impl ClassFile {
+    fn get_main_method<'a>(&'a self) -> &'a MemberInfo {
+        self
+            .methods
+            .iter()
+            .find(|x| x.name == "main" && x.descriptor == "([Ljava/lang/String;)V")
+            .expect("Main method not found")
+    }
+}
