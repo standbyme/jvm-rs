@@ -36,18 +36,21 @@ mod tests {
     }
 
     fn local_vars(local_vars: VecMap<Slot>) {
-        let local_vars_1 = local_vars.set_int(0, 100);
-        let local_vars_2 = local_vars_1.set_int(1, -100);
-        assert_eq!(local_vars_2.get_int(0), 100);
-        assert_eq!(local_vars_2.get_int(1), -100);
+        let local_vars = local_vars.set_int(0, 100);
+        let local_vars = local_vars.set_int(1, -100);
+        assert_eq!(local_vars.get_int(0), 100);
+        assert_eq!(local_vars.get_int(1), -100);
     }
 
     fn operand_stack(operand_stack: Vec<Slot>) {
-        let operand_stack_1 = operand_stack.push_int(100);
-        let operand_stack_2 = operand_stack_1.push_int(-100);
-        let (val, operand_stack_3) = operand_stack_2.pop_int();
+        let operand_stack = operand_stack.push_int(100);
+        let operand_stack = operand_stack.push_int(-100);
+        let operand_stack = operand_stack.push_long(2997924580);
+        let (val, operand_stack) = operand_stack.pop_long();
+        assert_eq!(val, 2997924580);
+        let (val, operand_stack) = operand_stack.pop_int();
         assert_eq!(val, -100);
-        let (val, operand_stack_4) = operand_stack_3.pop_int();
+        let (val, _) = operand_stack.pop_int();
         assert_eq!(val, 100);
     }
 }

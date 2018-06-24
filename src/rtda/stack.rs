@@ -15,7 +15,7 @@ impl Stack {
     }
 
     pub fn push(mut self, frame: Frame) -> Stack {
-        if (self.vec.len() == self.max_size) {
+        if self.vec.len() == self.max_size {
             panic!("java.lang.StackOverflowError")
         } else {
             self.vec.push(frame);

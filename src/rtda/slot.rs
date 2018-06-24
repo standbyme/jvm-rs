@@ -1,3 +1,3 @@
 pub enum Slot {
-    Bytes([u8; 4]),
+    Num(i32),
 }
