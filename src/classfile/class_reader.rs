@@ -10,6 +10,7 @@ use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
 use classfile::attribute_info::AttributeInfo;
 use util::modified_utf8::from_modified_utf8;
+use classfile::class_file::ClassFile;
 
 
 const CONSTANT_UTF8: u8 = 1;
@@ -24,19 +25,6 @@ const CONSTANT_METHODREF: u8 = 10;
 const CONSTANT_INTERFACE_METHODREF: u8 = 11;
 const CONSTANT_NAME_AND_TYPE: u8 = 12;
 
-#[derive(Debug)]
-pub struct ClassFile {
-    pub major_version: u16,
-    pub minor_version: u16,
-    pub constant_pool: ConstantPool,
-    pub access_flags: u16,
-    pub this_class: u16,
-    pub super_class: u16,
-    pub interfaces: Vec<u16>,
-    pub fields: Vec<MemberInfo>,
-    pub methods: Vec<MemberInfo>,
-    pub attributes: Vec<AttributeInfo>,
-}
 
 #[derive(Debug)]
 pub struct VersionInfo {
@@ -242,7 +230,15 @@ impl ClassReader for [u8] {
         let (name_index, after_name_index) = after_access_flags.read_u16();
         let (descriptor_index, after_descriptor_index) = after_name_index.read_u16();
         let (attributes, after_attributes) = after_descriptor_index.read_attributes(constant_pool);
-        let member_info = MemberInfo { access_flags, name_index, descriptor_index, attributes };
+        let name = match constant_pool[name_index as usize] {
+            ConstantInfo::UTF8(ref name) => name.to_owned(),
+            _ => panic!("name isn't UTF8")
+        };
+        let descriptor = match constant_pool[descriptor_index as usize] {
+            ConstantInfo::UTF8(ref descriptor) => descriptor.to_owned(),
+            _ => panic!("descriptor isn't UTF8")
+        };
+        let member_info = MemberInfo { access_flags, name_index, descriptor_index, attributes, name, descriptor };
         (member_info, after_attributes)
     }
 
@@ -359,7 +355,7 @@ impl ClassReader for [u8] {
 
 #[cfg(test)]
 mod tests {
-    use classfile::class_reader::ClassFile;
+    use classfile::class_file::ClassFile;
     use classfile::class_reader::ClassReader;
     use std::fs::File;
     use std::io::Read;
@@ -429,7 +425,9 @@ mod tests {
                 name_index,
                 descriptor_index,
                 attributes,
-                access_flags: _
+                access_flags: _,
+                name: _,
+                descriptor: _
             } => {
                 assert_eq!(name_index.to_owned(), 23 as u16);
                 assert_eq!(descriptor_index.to_owned(), 24 as u16);
@@ -441,7 +439,9 @@ mod tests {
                 name_index,
                 descriptor_index,
                 attributes,
-                access_flags: _
+                access_flags: _,
+                name: _,
+                descriptor: _
             } => {
                 assert_eq!(name_index.to_owned(), 46 as u16);
                 assert_eq!(descriptor_index.to_owned(), 19 as u16);
