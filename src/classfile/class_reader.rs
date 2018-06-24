@@ -1,17 +1,15 @@
 extern crate byteorder;
-extern crate vec_map;
+
+use vec_map::VecMap;
 
 use self::byteorder::{ByteOrder, BigEndian};
-use self::vec_map::VecMap;
 
-use classfile::attribute_info::ExceptionTableEntry;
+use classfile::attribute_info::{AttributeInfo, ExceptionTableEntry};
+use classfile::class_file::ClassFile;
 use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
-use classfile::attribute_info::AttributeInfo;
 use util::modified_utf8::from_modified_utf8;
-use classfile::class_file::ClassFile;
-
 
 const CONSTANT_UTF8: u8 = 1;
 const CONSTANT_INTEGER: u8 = 3;

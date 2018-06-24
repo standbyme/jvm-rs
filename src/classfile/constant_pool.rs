@@ -1,6 +1,4 @@
-extern crate vec_map;
-
-use self::vec_map::VecMap;
+use vec_map::VecMap;
 
 use classfile::constant_info::ConstantInfo;
 

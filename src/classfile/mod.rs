@@ -1,3 +1,5 @@
+extern crate vec_map;
+
 mod attribute_info;
 pub mod class_file;
 pub mod class_reader;
