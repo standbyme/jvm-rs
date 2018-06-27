@@ -404,8 +404,7 @@ mod tests {
     use std::io::Read;
     use classfile::constant_info::ConstantInfo;
     use classfile::member_info::MemberInfo;
-    use classfile::attribute_info::AttributeInfo;
-    use classfile::attribute_info::{ExceptionTableEntry , LineNumberTableEntry, LocalVariableTableEntry};
+    use classfile::attribute_info::{AttributeInfo,LineNumberTableEntry};
 
 
     #[test]
