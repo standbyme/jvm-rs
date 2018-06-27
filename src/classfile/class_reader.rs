@@ -273,6 +273,37 @@ impl ClassReader for [u8] {
         (exception_table, rest)
     }
 
+    fn read_line_number_table(&self) -> (Vec<LineNumberTableEntry>, &[u8]) {
+        let(line_number_table_length, after_line_number_table_length) = self.read_u16();
+        let mut line_number_table: Vec<LineNumberTableEntry> = Vec::with_capacity(line_number_table_length as usize);
+        let mut rest = after_line_number_table_length;
+        for _ in 1..= line_number_table_length {
+            let(start_pc, after_start_pc) = rest.read_u16();
+            let(line_number, after_line_number) = after_start_pc.read_u16(); 
+            let line_number_table_entry = LineNumberTableEntry { start_pc, line_number };
+            line_number_table.push(line_number_table_entry);
+            rest = after_line_number;
+        }
+        (line_number_table, rest)
+    }
+
+    fn read_local_variable_table(&self) -> (Vec<LocalVariableTableEntry>, &[u8]) {
+        let(local_variable_table_length, after_local_variable_table_length) = self.read_u16();
+        let mut local_varibale_table : Vec<LocalVariableTableEntry> = Vec::with_capacity(local_varibale_table as usize);
+        let mut rest = after_local_variable_table;
+        for _ in 1..= local_varibale_table_length{
+            let(start_pc, after_start_pc) = rest.read_u16();
+            let(length, after_length) = after_start_pc.read_u16();
+            let(name_index, after_name_index) = after_length.read_u16();
+            let(descriptor_index, after_descriptor_index) = after_name_index.read_u16();
+            let(index, after_index) = after_descriptor_index.read_u16();
+            let local_variable_table_entry = LocalVariableTableEntry { start_pc, length, name_index, descriptor_index, index };
+            local_varibale_table.push(local_variable_table_entry);
+            rest = after_index;
+        }
+        (local_varibale_table, rest)
+    }
+
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
         let (attribute_name_index, after_attribute_name_index) = self.read_u16();
         let attribute_name = match constant_pool.get(attribute_name_index as usize).unwrap() {
@@ -306,6 +337,16 @@ impl ClassReader for [u8] {
                 (AttributeInfo::SourceFile { sourcefile_index }, after_sourcefile_index)
             }
             "Synthetic" => (AttributeInfo::Synthetic {}, after_attribute_length),
+
+            "LineNumberTable" => {
+                let(line_number_table,after_line_number_table) = after_attribute_length.read_line_number_table();
+                (AttributeInfo::LineNumberTable { line_number_table }, after_line_number_table) 
+            }
+
+            "LocalVariableTable" => {
+                let(local_varibale_table,after_local_variable_table) = after_attribute_length.read_local_variable_table(constant_pool);
+                (AttributeInfo::LocalVariableTable {local_variable_table}, after_local_variable_table)
+            }
             _ => {
                 let (_, after_attribute_info) = after_attribute_length.read_bytes(attribute_length as usize);
                 let attribute_name = attribute_name.to_string();

@@ -7,6 +7,21 @@ pub struct ExceptionTableEntry {
 }
 
 #[derive(Debug)]
+pub struct LineNumberTableEntry {
+    pub start_pc: u16,
+    pub line_number: u16,
+}
+
+#[derive(Debug)]
+pub struct LocalVariableTableEntry {
+    start_pc: u16,
+    length: u16,
+    constant_pool_name_index: u16,
+    constant_pool_descriptor_index: u16,
+    frame_local_variable_array_index: u16,
+}
+
+#[derive(Debug)]
 pub enum AttributeInfo {
     Code {
         max_stack: u16,
@@ -30,5 +45,11 @@ pub enum AttributeInfo {
         attribute_name: String,
         attribute_length: u32,
     },
+    LineNumberTable {
+        line_number_table: Vec<LineNumberTableEntry>,
+    },
+    LocalVariableTable {
+        local_variable_table: Vec<LocalVariableTableEntry>,
+    }
 }
 
