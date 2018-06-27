@@ -14,11 +14,11 @@ pub struct LineNumberTableEntry {
 
 #[derive(Debug)]
 pub struct LocalVariableTableEntry {
-    start_pc: u16,
-    length: u16,
-    constant_pool_name_index: u16,
-    constant_pool_descriptor_index: u16,
-    frame_local_variable_array_index: u16,
+    pub start_pc: u16,
+    pub length: u16,
+    pub name_index: u16,
+    pub descriptor_index: u16,
+    pub index: u16,
 }
 
 #[derive(Debug)]

@@ -4,7 +4,7 @@ extern crate vec_map;
 use self::byteorder::{ByteOrder, BigEndian};
 use self::vec_map::VecMap;
 
-use classfile::attribute_info::ExceptionTableEntry;
+use classfile::attribute_info::{ExceptionTableEntry , LineNumberTableEntry, LocalVariableTableEntry};
 use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
@@ -53,6 +53,8 @@ pub trait ClassReader {
     fn read_member(&self, constant_pool: &ConstantPool) -> (MemberInfo, &[u8]);
     fn read_members(&self, constant_pool: &ConstantPool) -> (Vec<MemberInfo>, &[u8]);
     fn read_exception_table(&self) -> (Vec<ExceptionTableEntry>, &[u8]);
+    fn read_line_number_table(&self) -> (Vec<LineNumberTableEntry>, &[u8]);
+    fn read_local_variable_table(&self) -> (Vec<LocalVariableTableEntry>, &[u8]);
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]);
     fn read_attributes(&self, constant_pool: &ConstantPool) -> (Vec<AttributeInfo>, &[u8]);
     fn parse(&self) -> ClassFile;
@@ -289,19 +291,19 @@ impl ClassReader for [u8] {
 
     fn read_local_variable_table(&self) -> (Vec<LocalVariableTableEntry>, &[u8]) {
         let(local_variable_table_length, after_local_variable_table_length) = self.read_u16();
-        let mut local_varibale_table : Vec<LocalVariableTableEntry> = Vec::with_capacity(local_varibale_table as usize);
-        let mut rest = after_local_variable_table;
-        for _ in 1..= local_varibale_table_length{
+        let mut local_variable_table : Vec<LocalVariableTableEntry> = Vec::with_capacity(local_variable_table_length as usize);
+        let mut rest = after_local_variable_table_length;
+        for _ in 1..= local_variable_table_length{
             let(start_pc, after_start_pc) = rest.read_u16();
             let(length, after_length) = after_start_pc.read_u16();
             let(name_index, after_name_index) = after_length.read_u16();
             let(descriptor_index, after_descriptor_index) = after_name_index.read_u16();
             let(index, after_index) = after_descriptor_index.read_u16();
             let local_variable_table_entry = LocalVariableTableEntry { start_pc, length, name_index, descriptor_index, index };
-            local_varibale_table.push(local_variable_table_entry);
+            local_variable_table.push(local_variable_table_entry);
             rest = after_index;
         }
-        (local_varibale_table, rest)
+        (local_variable_table, rest)
     }
 
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
@@ -344,7 +346,7 @@ impl ClassReader for [u8] {
             }
 
             "LocalVariableTable" => {
-                let(local_varibale_table,after_local_variable_table) = after_attribute_length.read_local_variable_table(constant_pool);
+                let(local_variable_table,after_local_variable_table) = after_attribute_length.read_local_variable_table();
                 (AttributeInfo::LocalVariableTable {local_variable_table}, after_local_variable_table)
             }
             _ => {
@@ -403,6 +405,8 @@ mod tests {
     use classfile::constant_info::ConstantInfo;
     use classfile::member_info::MemberInfo;
     use classfile::attribute_info::AttributeInfo;
+    use classfile::attribute_info::{ExceptionTableEntry , LineNumberTableEntry, LocalVariableTableEntry};
+
 
     #[test]
     fn parse() {
@@ -500,6 +504,23 @@ mod tests {
                         assert_eq!(code.len(), 4 as usize);
                         assert_eq!(exception_table.len(), 0 as usize);
                         assert_eq!(attributes.len(), 1 as usize);
+                        match attributes.get(0).unwrap() {
+                            AttributeInfo::LineNumberTable {
+                                line_number_table
+                            } => {
+                                match line_number_table.get(0).unwrap() {
+                                    LineNumberTableEntry {
+                                        start_pc,
+                                        line_number
+                                    } => {
+                                         assert_eq!(*start_pc, 0u16);
+                                         assert_eq!(*line_number, 41u16)
+
+                                    }
+                                }
+                            }
+                            _ =>panic!()
+                        }
                     }
                     _ => panic!()
                 }
