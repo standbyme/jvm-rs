@@ -427,7 +427,7 @@ mod tests {
         assert_eq!(minor_version, 0);
         assert_eq!(constant_pool.capacity(), 79);
         match constant_pool.get(1).unwrap() {
-            ConstantInfo::Class { name_index } => assert_eq!(name_index.to_owned(), 49 as u16),
+            ConstantInfo::Class { name_index } => assert_eq!(*name_index, 49u16),
             _ => panic!()
         };
         match constant_pool.get(9).unwrap() {
@@ -438,7 +438,7 @@ mod tests {
             _ => panic!()
         };
         match constant_pool.get(13).unwrap() {
-            ConstantInfo::Integer(value) => assert_eq!(value.to_owned(), 999999 as i32),
+            ConstantInfo::Integer(value) => assert_eq!(*value, 999999i32),
             _ => panic!()
         };
         match constant_pool.get(22).unwrap() {
@@ -447,8 +447,8 @@ mod tests {
         };
         match constant_pool.get(50).unwrap() {
             ConstantInfo::NameAndType { name_index, descriptor_index } => {
-                assert_eq!(name_index.to_owned(), 18 as u16);
-                assert_eq!(descriptor_index.to_owned(), 19 as u16);
+                assert_eq!(*name_index, 18u16);
+                assert_eq!(*descriptor_index, 19u16);
             }
             _ => panic!()
         };
@@ -471,9 +471,9 @@ mod tests {
                 name: _,
                 descriptor: _
             } => {
-                assert_eq!(name_index.to_owned(), 23 as u16);
-                assert_eq!(descriptor_index.to_owned(), 24 as u16);
-                assert_eq!(attributes.len(), 1 as usize);
+                assert_eq!(*name_index, 23u16);
+                assert_eq!(*descriptor_index, 24u16);
+                assert_eq!(attributes.len(), 1usize);
             }
         }
         match methods.get(13).unwrap() {
@@ -485,9 +485,9 @@ mod tests {
                 name: _,
                 descriptor: _
             } => {
-                assert_eq!(name_index.to_owned(), 46 as u16);
-                assert_eq!(descriptor_index.to_owned(), 19 as u16);
-                assert_eq!(attributes.len(), 1 as usize);
+                assert_eq!(*name_index, 46u16);
+                assert_eq!(*descriptor_index, 19u16);
+                assert_eq!(attributes.len(), 1usize);
                 match attributes.get(0).unwrap() {
                     AttributeInfo::Code {
                         max_stack,
@@ -496,11 +496,11 @@ mod tests {
                         exception_table,
                         attributes
                     } => {
-                        assert_eq!(max_stack.to_owned(), 0 as u16);
-                        assert_eq!(max_locals.to_owned(), 0 as u16);
-                        assert_eq!(code.len(), 4 as usize);
-                        assert_eq!(exception_table.len(), 0 as usize);
-                        assert_eq!(attributes.len(), 1 as usize);
+                        assert_eq!(*max_stack, 0u16);
+                        assert_eq!(*max_locals, 0u16);
+                        assert_eq!(code.len(), 4usize);
+                        assert_eq!(exception_table.len(), 0usize);
+                        assert_eq!(attributes.len(), 1usize);
                         match attributes.get(0).unwrap() {
                             AttributeInfo::LineNumberTable {
                                 line_number_table
@@ -527,7 +527,7 @@ mod tests {
             AttributeInfo::SourceFile {
                 sourcefile_index
             } => {
-                assert_eq!(sourcefile_index.to_owned(), 48 as u16);
+                assert_eq!(*sourcefile_index, 48u16);
             }
             _ => panic!()
         }
