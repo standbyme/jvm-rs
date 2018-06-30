@@ -1,2 +1,4 @@
-pub mod constant;
+mod constant;
 mod instruction;
+mod load;
+mod store;
