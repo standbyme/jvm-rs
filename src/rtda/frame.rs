@@ -4,8 +4,8 @@ use rtda::slot::Slot;
 use vec_map::VecMap;
 
 pub struct Frame {
-    local_vars: VecMap<Slot>,
-    operand_stack: OperandStack,
+    pub local_vars: VecMap<Slot>,
+    pub operand_stack: OperandStack,
 }
 
 impl Frame {

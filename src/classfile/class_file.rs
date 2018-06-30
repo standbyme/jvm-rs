@@ -17,7 +17,7 @@ pub struct ClassFile {
 }
 
 impl ClassFile {
-    fn get_main_method<'a>(&'a self) -> &'a MemberInfo {
+    pub fn get_main_method<'a>(&'a self) -> &'a MemberInfo {
         self
             .methods
             .iter()
