@@ -4,14 +4,14 @@ use rtda::slot::Slot;
 use vec_map::VecMap;
 
 pub struct Frame {
-    pub local_vars: VecMap<Slot>,
+    pub local_vars: LocalVars,
     pub operand_stack: OperandStack,
 }
 
 impl Frame {
     pub fn new(max_locals: usize, max_stack: usize) -> Frame {
-        let local_vars = <LocalVars>::new(max_locals);
-        let operand_stack = <OperandStack>::new(max_stack);
+        let local_vars = LocalVars::new(max_locals);
+        let operand_stack = OperandStack::new(max_stack);
         Frame {
             local_vars,
             operand_stack,
@@ -35,7 +35,7 @@ mod tests {
         operand_stack(frame.operand_stack);
     }
 
-    fn local_vars(local_vars: VecMap<Slot>) {
+    fn local_vars(local_vars: LocalVars) {
         let local_vars = local_vars.set_int(0, 100);
         let local_vars = local_vars.set_int(1, -100);
         assert_eq!(local_vars.get_int(0), 100);
