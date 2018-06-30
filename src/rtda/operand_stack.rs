@@ -1,50 +1,65 @@
 use rtda::slot::Slot;
 use util::converter;
 
-pub trait OperandStack {
-    fn push_int(mut self, val: i32) -> Vec<Slot>;
-    fn pop_int(mut self) -> (i32, Vec<Slot>);
-    fn push_long(mut self, val: i64) -> Vec<Slot>;
-    fn pop_long(mut self) -> (i64, Vec<Slot>);
+pub struct OperandStack {
+    vec: Vec<Slot>
 }
 
-impl dyn OperandStack {
-    pub fn new(max_stack: usize) -> Vec<Slot> {
-        Vec::with_capacity(max_stack)
+impl OperandStack {
+    pub fn new(max_stack: usize) -> OperandStack {
+        OperandStack {
+            vec: Vec::with_capacity(max_stack)
+        }
     }
-}
 
-
-impl OperandStack for Vec<Slot> {
-    fn push_int(mut self, val: i32) -> Vec<Slot> {
-        self.push(Slot::Num(val));
+    pub fn push_int(mut self, val: i32) -> OperandStack {
+        self.vec.push(Slot::Num(val));
         self
     }
 
-    fn pop_int(mut self) -> (i32, Vec<Slot>) {
-        let val = self.pop().unwrap();
+    pub fn pop_int(mut self) -> (i32, OperandStack) {
+        let val = self.vec.pop().unwrap();
         match val {
             Slot::Num(val) => (val, self),
             _ => panic!()
         }
     }
 
-    fn push_long(mut self, val: i64) -> Vec<Slot> {
+    pub fn push_long(mut self, val: i64) -> OperandStack {
         let [a, b] = converter::i64_to_i32seq(val);
-        self.push(Slot::Num(a));
-        self.push(Slot::Num(b));
+        self.vec.push(Slot::Num(a));
+        self.vec.push(Slot::Num(b));
         self
     }
 
-    fn pop_long(mut self) -> (i64, Vec<Slot>) {
-        let b = match self.pop().unwrap() {
+    pub fn pop_long(mut self) -> (i64, OperandStack) {
+        let b = match self.vec.pop().unwrap() {
             Slot::Num(val) => val,
             _ => panic!()
         };
-        let a = match self.pop().unwrap() {
+        let a = match self.vec.pop().unwrap() {
             Slot::Num(val) => val,
             _ => panic!()
         };
         (converter::i32seq_to_i64([a, b]), self)
+    }
+
+    pub fn push_double(mut self, val: f64) -> OperandStack {
+        let [a, b] = converter::f64_to_i32seq(val);
+        self.vec.push(Slot::Num(a));
+        self.vec.push(Slot::Num(b));
+        self
+    }
+
+    pub fn pop_double(mut self) -> (f64, OperandStack) {
+        let b = match self.vec.pop().unwrap() {
+            Slot::Num(val) => val,
+            _ => panic!()
+        };
+        let a = match self.vec.pop().unwrap() {
+            Slot::Num(val) => val,
+            _ => panic!()
+        };
+        (converter::i32seq_to_f64([a, b]), self)
     }
 }

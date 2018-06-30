@@ -5,11 +5,11 @@ use vec_map::VecMap;
 
 pub struct Frame {
     local_vars: VecMap<Slot>,
-    operand_stack: Vec<Slot>,
+    operand_stack: OperandStack,
 }
 
 impl Frame {
-    fn new(max_locals: usize, max_stack: usize) -> Frame {
+    pub fn new(max_locals: usize, max_stack: usize) -> Frame {
         let local_vars = <LocalVars>::new(max_locals);
         let operand_stack = <OperandStack>::new(max_stack);
         Frame {
@@ -42,14 +42,17 @@ mod tests {
         assert_eq!(local_vars.get_int(1), -100);
     }
 
-    fn operand_stack(operand_stack: Vec<Slot>) {
+    fn operand_stack(operand_stack: OperandStack) {
         let operand_stack = operand_stack.push_int(100);
+        let operand_stack = operand_stack.push_double(2.71828182845f64);
         let operand_stack = operand_stack.push_int(-100);
         let operand_stack = operand_stack.push_long(2997924580);
         let (val, operand_stack) = operand_stack.pop_long();
         assert_eq!(val, 2997924580);
         let (val, operand_stack) = operand_stack.pop_int();
         assert_eq!(val, -100);
+        let (val, operand_stack) = operand_stack.pop_double();
+        assert_eq!(val, 2.71828182845f64);
         let (val, _) = operand_stack.pop_int();
         assert_eq!(val, 100);
     }
