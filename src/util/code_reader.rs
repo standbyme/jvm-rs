@@ -16,35 +16,46 @@ impl<'a> CodeReader<'a> {
         }
     }
 
-    pub fn set_pc(&mut self, pc: usize) {
-        self.pc = pc;
+    pub fn set_pc(self, pc: usize) -> CodeReader<'a> {
+        let CodeReader { pc: _, code } = self;
+        CodeReader {
+            code,
+            pc,
+        }
     }
 
-    pub fn read_u8(&mut self) -> u8 {
-        let pc = self.pc;
-        let v = self.code[pc];
-        self.pc = pc + 1;
-        v
+    pub fn read_u8(self) -> (u8, CodeReader<'a>) {
+        let CodeReader { pc, code } = self;
+        let val = code[pc];
+        let pc = pc + 1;
+        let code_reader = CodeReader { pc, code };
+        (val, code_reader)
     }
 
-    pub fn read_i8(&mut self) -> i8 {
-        let pc = self.pc;
-        let v = self.code[pc];
-        self.pc = pc + 1;
-        unsafe { std::mem::transmute::<u8, i8>(v) }
+    pub fn read_i8(self) -> (i8, CodeReader<'a>) {
+        let CodeReader { pc, code } = self;
+        let v = code[pc];
+        let val = unsafe { std::mem::transmute::<u8, i8>(v) };
+        let pc = pc + 1;
+        let code_reader = CodeReader { pc, code };
+        (val, code_reader)
     }
 
-    pub fn read_u16(&mut self) -> u16 {
-        let pc = self.pc;
-        let seq = &self.code[pc..(pc + 1)];
-        self.pc = pc + 2;
-        BigEndian::read_u16(&seq)
+    pub fn read_u16(self) -> (u16, CodeReader<'a>) {
+        let CodeReader { pc, code } = self;
+        let seq = &code[pc..(pc + 1)];
+        let val = BigEndian::read_u16(&seq);
+        let pc = pc + 2;
+        let code_reader = CodeReader { pc, code };
+        (val, code_reader)
     }
 
-    pub fn read_i16(&mut self) -> i16 {
-        let pc = self.pc;
-        let seq = &self.code[pc..(pc + 1)];
-        self.pc = pc + 2;
-        BigEndian::read_i16(&seq)
+    pub fn read_i16(self) -> (i16, CodeReader<'a>) {
+        let CodeReader { pc, code } = self;
+        let seq = &code[pc..(pc + 1)];
+        let val = BigEndian::read_i16(&seq);
+        let pc = pc + 2;
+        let code_reader = CodeReader { pc, code };
+        (val, code_reader)
     }
 }
