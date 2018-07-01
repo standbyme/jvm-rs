@@ -1,17 +1,17 @@
 use util::code_reader::CodeReader;
-use instruction::constant::nop::NOP;
 use rtda::frame::Frame;
+use instruction::constant::nop::NOP;
 
-pub trait Instruction {
-    fn execute(&self, frame: Frame) -> Frame;
+pub struct ExecuteResult {
+    pub frame: Frame,
+    pub offset: isize,
 }
 
-impl dyn Instruction {
-    pub fn new(opcode: u8, reader: CodeReader) -> Box<dyn Instruction> {
-        match opcode {
-            0x00 => NOP::new(reader),
 
-            _ => panic!("Unsupported opcode")
-        }
+pub fn execute(opcode: u8, reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    match opcode {
+        0x00 => NOP(reader, frame),
+
+        _ => panic!("Unsupported opcode")
     }
 }

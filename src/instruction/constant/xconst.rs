@@ -1,54 +1,46 @@
-use instruction::instruction::Instruction;
 use util::code_reader::CodeReader;
 use rtda::frame::Frame;
+use instruction::instruction::ExecuteResult;
 
-#[allow(non_camel_case_types)]
-pub struct DCONST_0 {}
 
-impl Instruction for DCONST_0 {
-    fn execute(&self, frame: Frame) -> Frame {
-        let operand_stack = frame.operand_stack.push_double(0f64);
-        let local_vars = frame.local_vars;
-        Frame { local_vars, operand_stack }
-    }
+#[allow(non_snake_case)]
+fn DCONST_0(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let Frame { operand_stack, local_vars } = frame;
+    let operand_stack = operand_stack.push_double(0f64);
+    let local_vars = local_vars;
+    let frame = Frame { operand_stack, local_vars };
+
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }
 
-impl DCONST_0 {
-    pub fn new(_reader: CodeReader) -> Box<dyn Instruction> {
-        Box::new(DCONST_0 {})
-    }
+#[allow(non_snake_case)]
+fn ICONST_0(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let Frame { operand_stack, local_vars } = frame;
+    let operand_stack = operand_stack.push_int(0);
+    let local_vars = local_vars;
+    let frame = Frame { operand_stack, local_vars };
+
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }
 
-#[allow(non_camel_case_types)]
-pub struct ICONST_0 {}
+#[allow(non_snake_case)]
+fn ICONST_1(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let Frame { operand_stack, local_vars } = frame;
+    let operand_stack = operand_stack.push_int(1);
+    let local_vars = local_vars;
+    let frame = Frame { operand_stack, local_vars };
 
-impl Instruction for ICONST_0 {
-    fn execute(&self, frame: Frame) -> Frame {
-        let operand_stack = frame.operand_stack.push_int(0);
-        let local_vars = frame.local_vars;
-        Frame { local_vars, operand_stack }
-    }
-}
-
-impl ICONST_0 {
-    pub fn new(_reader: CodeReader) -> Box<dyn Instruction> {
-        Box::new(ICONST_0 {})
-    }
-}
-
-#[allow(non_camel_case_types)]
-pub struct ICONST_1 {}
-
-impl Instruction for ICONST_1 {
-    fn execute(&self, frame: Frame) -> Frame {
-        let operand_stack = frame.operand_stack.push_int(1);
-        let local_vars = frame.local_vars;
-        Frame { local_vars, operand_stack }
-    }
-}
-
-impl ICONST_1 {
-    pub fn new(_reader: CodeReader) -> Box<dyn Instruction> {
-        Box::new(ICONST_1 {})
-    }
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }

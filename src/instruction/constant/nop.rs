@@ -3,7 +3,7 @@ use rtda::frame::Frame;
 use instruction::instruction::ExecuteResult;
 
 #[allow(non_snake_case)]
-fn NOP(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn NOP(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
     let execute_result = ExecuteResult {
         frame,
         offset: 0,

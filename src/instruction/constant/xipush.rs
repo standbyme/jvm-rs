@@ -1,24 +1,19 @@
-use instruction::instruction::Instruction;
-use util::code_reader::CodeReader;
+use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
+use util::code_reader::CodeReader;
 
-#[allow(non_camel_case_types)]
-pub struct BIPUSH {
-    val: i8
-}
+#[allow(non_snake_case)]
+fn BIPUSH(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let Frame { operand_stack, local_vars } = frame;
 
-impl Instruction for BIPUSH {
-    fn execute(&self, frame: Frame) -> Frame {
-        let i = self.val;
-        let Frame { operand_stack, local_vars } = frame;
-        let operand_stack = operand_stack.push_int(i as i32);
-        Frame { local_vars, operand_stack }
-    }
-}
+    let (val, reader) = reader.read_i8();
+    let i = val;
+    let operand_stack = operand_stack.push_int(i as i32);
 
-impl BIPUSH {
-    pub fn new(reader: CodeReader) -> (Box<dyn Instruction>, CodeReader) {
-        let (val, code_reader) = reader.read_i8();
-        (Box::new(BIPUSH { val }), code_reader)
-    }
+    let frame = Frame { operand_stack, local_vars };
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }

@@ -1,6 +1,6 @@
-use instruction::instruction::Instruction;
 use util::code_reader::CodeReader;
 use rtda::frame::Frame;
+use instruction::instruction::ExecuteResult;
 
 fn _iload(frame: Frame, index: usize) -> Frame {
     let Frame { operand_stack, local_vars } = frame;
@@ -9,47 +9,34 @@ fn _iload(frame: Frame, index: usize) -> Frame {
     Frame { operand_stack, local_vars }
 }
 
-#[allow(non_camel_case_types)]
-pub struct ILOAD_0 {}
 
-impl Instruction for ILOAD_0 {
-    fn execute(&self, frame: Frame) -> Frame {
-        _iload(frame, 0)
-    }
+#[allow(non_snake_case)]
+fn ILOAD_0(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let frame = _iload(frame, 0);
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }
 
-impl ILOAD_0 {
-    pub fn new(reader: CodeReader) -> (Box<dyn Instruction>, CodeReader) {
-        (Box::new(ILOAD_0 {}), reader)
-    }
+
+#[allow(non_snake_case)]
+fn ILOAD_1(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let frame = _iload(frame, 1);
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }
 
-#[allow(non_camel_case_types)]
-pub struct ILOAD_1 {}
-
-impl Instruction for ILOAD_1 {
-    fn execute(&self, frame: Frame) -> Frame {
-        _iload(frame, 1)
-    }
-}
-
-impl ILOAD_1 {
-    pub fn new(reader: CodeReader) -> (Box<dyn Instruction>, CodeReader) {
-        (Box::new(ILOAD_1 {}), reader)
-    }
-}
-
-#[allow(non_camel_case_types)]
-pub struct ILOAD_2 {}
-
-impl Instruction for ILOAD_2 {
-    fn execute(&self, frame: Frame) -> Frame {
-        _iload(frame, 2)
-    }
-}
-
-impl ILOAD_2 {
-    pub fn new(reader: CodeReader) -> (Box<dyn Instruction>, CodeReader) {
-        (Box::new(ILOAD_2 {}), reader)
-    }
+#[allow(non_snake_case)]
+fn ILOAD_2(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let frame = _iload(frame, 2);
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }

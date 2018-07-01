@@ -1,6 +1,6 @@
-use instruction::instruction::Instruction;
 use util::code_reader::CodeReader;
 use rtda::frame::Frame;
+use instruction::instruction::ExecuteResult;
 
 fn _istore(frame: Frame, index: usize) -> Frame {
     let Frame { operand_stack, local_vars } = frame;
@@ -9,32 +9,25 @@ fn _istore(frame: Frame, index: usize) -> Frame {
     Frame { operand_stack, local_vars }
 }
 
-#[allow(non_camel_case_types)]
-pub struct ISTORE_1 {}
 
-impl Instruction for ISTORE_1 {
-    fn execute(&self, frame: Frame) -> Frame {
-        _istore(frame, 1)
-    }
+#[allow(non_snake_case)]
+fn ISTORE_1(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let frame = _istore(frame, 1);
+
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }
 
-impl ISTORE_1 {
-    pub fn new(reader: CodeReader) -> (Box<dyn Instruction>, CodeReader) {
-        (Box::new(ISTORE_1 {}), reader)
-    }
-}
+#[allow(non_snake_case)]
+fn ISTORE_2(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let frame = _istore(frame, 2);
 
-#[allow(non_camel_case_types)]
-pub struct ISTORE_2 {}
-
-impl Instruction for ISTORE_2 {
-    fn execute(&self, frame: Frame) -> Frame {
-        _istore(frame, 2)
-    }
-}
-
-impl ISTORE_2 {
-    pub fn new(reader: CodeReader) -> (Box<dyn Instruction>, CodeReader) {
-        (Box::new(ISTORE_2 {}), reader)
-    }
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }
