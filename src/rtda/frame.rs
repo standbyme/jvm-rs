@@ -1,7 +1,5 @@
 use rtda::local_vars::LocalVars;
 use rtda::operand_stack::OperandStack;
-use rtda::slot::Slot;
-use vec_map::VecMap;
 
 #[derive(Debug)]
 pub struct Frame {
@@ -25,8 +23,6 @@ mod tests {
     use rtda::frame::Frame;
     use rtda::local_vars::LocalVars;
     use rtda::operand_stack::OperandStack;
-    use rtda::slot::Slot;
-    use vec_map::VecMap;
 
     #[test]
     fn frame() {
