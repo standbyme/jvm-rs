@@ -1,20 +1,19 @@
-use util::code_reader::CodeReader;
-use rtda::frame::Frame;
+use instruction::comparison::if_icmp::*;
 use instruction::constant::nop::NOP;
 use instruction::constant::xconst::*;
-use instruction::store::istore::*;
-use instruction::load::iload::*;
 use instruction::constant::xipush::*;
-use instruction::comparison::if_icmp::*;
+use instruction::control::goto::*;
+use instruction::load::iload::*;
 use instruction::math::add::*;
 use instruction::math::inc::*;
-use instruction::control::goto::*;
+use instruction::store::istore::*;
+use rtda::frame::Frame;
+use util::code_reader::CodeReader;
 
 pub struct ExecuteResult {
     pub frame: Frame,
     pub offset: isize,
 }
-
 
 pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
     let instruction = match opcode {
@@ -32,7 +31,7 @@ pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteRes
         0x84 => IINC,
         0xa7 => GOTO,
         _ => {
-            println!("{:?}",frame);
+            println!("{:?}", frame);
             panic!("Unsupported opcode")
         }
     };

@@ -20,14 +20,13 @@ impl Frame {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use rtda::frame::Frame;
     use rtda::local_vars::LocalVars;
+    use rtda::operand_stack::OperandStack;
     use rtda::slot::Slot;
     use vec_map::VecMap;
-    use rtda::operand_stack::OperandStack;
 
     #[test]
     fn frame() {

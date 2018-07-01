@@ -31,14 +31,14 @@ pub enum AttributeInfo {
         attributes: Vec<AttributeInfo>,
     },
     ConstantValue {
-        constantvalue_index: u16
+        constantvalue_index: u16,
     },
     Deprecated,
     Exceptions {
-        exception_index_table: Vec<u16>
+        exception_index_table: Vec<u16>,
     },
     SourceFile {
-        sourcefile_index: u16
+        sourcefile_index: u16,
     },
     Synthetic,
     Unparsed {
@@ -50,6 +50,5 @@ pub enum AttributeInfo {
     },
     LocalVariableTable {
         local_variable_table: Vec<LocalVariableTableEntry>,
-    }
+    },
 }
-

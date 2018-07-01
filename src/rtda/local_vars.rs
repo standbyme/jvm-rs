@@ -6,7 +6,7 @@ use rtda::slot::Slot;
 
 #[derive(Debug)]
 pub struct LocalVars {
-    vec_map: VecMap<Slot>
+    vec_map: VecMap<Slot>,
 }
 
 impl LocalVars {
@@ -27,7 +27,7 @@ impl LocalVars {
     pub fn get_int(&self, index: usize) -> i32 {
         match self.vec_map[index] {
             Slot::Num(val) => val,
-            _ => panic!("get_int from wrong place")
+            _ => panic!("get_int from wrong place"),
         }
     }
 }

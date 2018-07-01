@@ -1,13 +1,13 @@
 extern crate jvm;
 
+use jvm::classfile::attribute_info::AttributeInfo;
 use jvm::classfile::class_reader::ClassReader;
 use jvm::classfile::member_info::MemberInfo;
-use jvm::classfile::attribute_info::AttributeInfo;
-use jvm::rtda::thread::Thread;
-use jvm::rtda::frame::Frame;
-use jvm::util::code_reader::CodeReader;
 use jvm::instruction::instruction;
 use jvm::instruction::instruction::ExecuteResult;
+use jvm::rtda::frame::Frame;
+use jvm::rtda::thread::Thread;
+use jvm::util::code_reader::CodeReader;
 
 use std::fs::File;
 use std::io::Read;
@@ -25,8 +25,14 @@ fn main() {
 fn interpret(method_info: &MemberInfo) {
     let code_attribute = method_info.get_code_attribute();
     let (max_stack, max_locals, code) = match code_attribute {
-        AttributeInfo::Code { max_stack, max_locals, code, exception_table: _, attributes: _ } => (max_stack, max_locals, code),
-        _ => panic!("Not Code Attribute")
+        AttributeInfo::Code {
+            max_stack,
+            max_locals,
+            code,
+            exception_table: _,
+            attributes: _,
+        } => (max_stack, max_locals, code),
+        _ => panic!("Not Code Attribute"),
     };
     let thread = Thread::new();
     let frame = Frame::new(*max_locals as usize, *max_stack as usize);
@@ -52,7 +58,7 @@ fn execute(thread: Thread, code: &Vec<u8>) {
 
         mut_pc = match offset {
             0 => after_execute.pc,
-            i => (pc as isize + offset) as usize
+            i => (pc as isize + offset) as usize,
         };
 
         println!("pc: {}", pc);
@@ -61,8 +67,5 @@ fn execute(thread: Thread, code: &Vec<u8>) {
         println!();
         mut_frame = frame;
         mut_code_reader = after_execute;
-
-//        let ten_millis = time::Duration::from_secs(1);
-//        thread::sleep(ten_millis);
     }
 }

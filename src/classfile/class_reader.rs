@@ -2,9 +2,11 @@ extern crate byteorder;
 
 use vec_map::VecMap;
 
-use self::byteorder::{ByteOrder, BigEndian};
+use self::byteorder::{BigEndian, ByteOrder};
 
-use classfile::attribute_info::{AttributeInfo, ExceptionTableEntry, LineNumberTableEntry, LocalVariableTableEntry};
+use classfile::attribute_info::{
+    AttributeInfo, ExceptionTableEntry, LineNumberTableEntry, LocalVariableTableEntry,
+};
 use classfile::class_file::ClassFile;
 use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
@@ -22,7 +24,6 @@ const CONSTANT_FIELDREF: u8 = 9;
 const CONSTANT_METHODREF: u8 = 10;
 const CONSTANT_INTERFACE_METHODREF: u8 = 11;
 const CONSTANT_NAME_AND_TYPE: u8 = 12;
-
 
 #[derive(Debug)]
 pub struct VersionInfo {
@@ -165,22 +166,46 @@ impl ClassReader for [u8] {
             CONSTANT_NAME_AND_TYPE => {
                 let (name_index, after_name_index) = after_tag.read_u16();
                 let (descriptor_index, rest) = after_name_index.read_u16();
-                (ConstantInfo::NameAndType { name_index, descriptor_index }, rest)
+                (
+                    ConstantInfo::NameAndType {
+                        name_index,
+                        descriptor_index,
+                    },
+                    rest,
+                )
             }
             CONSTANT_FIELDREF => {
                 let (class_index, after_class_index) = after_tag.read_u16();
                 let (name_and_type_index, rest) = after_class_index.read_u16();
-                (ConstantInfo::FieldRef { class_index, name_and_type_index }, rest)
+                (
+                    ConstantInfo::FieldRef {
+                        class_index,
+                        name_and_type_index,
+                    },
+                    rest,
+                )
             }
             CONSTANT_METHODREF => {
                 let (class_index, after_class_index) = after_tag.read_u16();
                 let (name_and_type_index, rest) = after_class_index.read_u16();
-                (ConstantInfo::MethodRef { class_index, name_and_type_index }, rest)
+                (
+                    ConstantInfo::MethodRef {
+                        class_index,
+                        name_and_type_index,
+                    },
+                    rest,
+                )
             }
             CONSTANT_INTERFACE_METHODREF => {
                 let (class_index, after_class_index) = after_tag.read_u16();
                 let (name_and_type_index, rest) = after_class_index.read_u16();
-                (ConstantInfo::InterfaceMethodRef { class_index, name_and_type_index }, rest)
+                (
+                    ConstantInfo::InterfaceMethodRef {
+                        class_index,
+                        name_and_type_index,
+                    },
+                    rest,
+                )
             }
             _ => {
                 panic!("Wrong tag type");
@@ -200,7 +225,7 @@ impl ClassReader for [u8] {
             rest = next_rest;
             let add = match constant_info {
                 ConstantInfo::Long(_) | ConstantInfo::Double(_) => 2,
-                _ => 1
+                _ => 1,
             };
             constant_pool.insert(i, constant_info);
             i = i + add;
@@ -232,13 +257,20 @@ impl ClassReader for [u8] {
         let (attributes, after_attributes) = after_descriptor_index.read_attributes(constant_pool);
         let name = match constant_pool[name_index as usize] {
             ConstantInfo::UTF8(ref name) => name.to_owned(),
-            _ => panic!("name isn't UTF8")
+            _ => panic!("name isn't UTF8"),
         };
         let descriptor = match constant_pool[descriptor_index as usize] {
             ConstantInfo::UTF8(ref descriptor) => descriptor.to_owned(),
-            _ => panic!("descriptor isn't UTF8")
+            _ => panic!("descriptor isn't UTF8"),
         };
-        let member_info = MemberInfo { access_flags, name_index, descriptor_index, attributes, name, descriptor };
+        let member_info = MemberInfo {
+            access_flags,
+            name_index,
+            descriptor_index,
+            attributes,
+            name,
+            descriptor,
+        };
         (member_info, after_attributes)
     }
 
@@ -259,14 +291,20 @@ impl ClassReader for [u8] {
 
     fn read_exception_table(&self) -> (Vec<ExceptionTableEntry>, &[u8]) {
         let (exception_table_length, after_exception_table_length) = self.read_u16();
-        let mut exception_table: Vec<ExceptionTableEntry> = Vec::with_capacity(exception_table_length as usize);
+        let mut exception_table: Vec<ExceptionTableEntry> =
+            Vec::with_capacity(exception_table_length as usize);
         let mut rest = after_exception_table_length;
         for _ in 1..=exception_table_length {
             let (start_pc, after_start_pc) = rest.read_u16();
             let (end_pc, after_end_pc) = after_start_pc.read_u16();
             let (handler_pc, after_handler_pc) = after_end_pc.read_u16();
             let (catch_type, after_catch_type) = after_handler_pc.read_u16();
-            let exception_table_entry = ExceptionTableEntry { start_pc, end_pc, handler_pc, catch_type };
+            let exception_table_entry = ExceptionTableEntry {
+                start_pc,
+                end_pc,
+                handler_pc,
+                catch_type,
+            };
             exception_table.push(exception_table_entry);
             rest = after_catch_type;
         }
@@ -275,12 +313,16 @@ impl ClassReader for [u8] {
 
     fn read_line_number_table(&self) -> (Vec<LineNumberTableEntry>, &[u8]) {
         let (line_number_table_length, after_line_number_table_length) = self.read_u16();
-        let mut line_number_table: Vec<LineNumberTableEntry> = Vec::with_capacity(line_number_table_length as usize);
+        let mut line_number_table: Vec<LineNumberTableEntry> =
+            Vec::with_capacity(line_number_table_length as usize);
         let mut rest = after_line_number_table_length;
         for _ in 1..=line_number_table_length {
             let (start_pc, after_start_pc) = rest.read_u16();
             let (line_number, after_line_number) = after_start_pc.read_u16();
-            let line_number_table_entry = LineNumberTableEntry { start_pc, line_number };
+            let line_number_table_entry = LineNumberTableEntry {
+                start_pc,
+                line_number,
+            };
             line_number_table.push(line_number_table_entry);
             rest = after_line_number;
         }
@@ -289,7 +331,8 @@ impl ClassReader for [u8] {
 
     fn read_local_variable_table(&self) -> (Vec<LocalVariableTableEntry>, &[u8]) {
         let (local_variable_table_length, after_local_variable_table_length) = self.read_u16();
-        let mut local_variable_table: Vec<LocalVariableTableEntry> = Vec::with_capacity(local_variable_table_length as usize);
+        let mut local_variable_table: Vec<LocalVariableTableEntry> =
+            Vec::with_capacity(local_variable_table_length as usize);
         let mut rest = after_local_variable_table_length;
         for _ in 1..=local_variable_table_length {
             let (start_pc, after_start_pc) = rest.read_u16();
@@ -297,7 +340,13 @@ impl ClassReader for [u8] {
             let (name_index, after_name_index) = after_length.read_u16();
             let (descriptor_index, after_descriptor_index) = after_name_index.read_u16();
             let (index, after_index) = after_descriptor_index.read_u16();
-            let local_variable_table_entry = LocalVariableTableEntry { start_pc, length, name_index, descriptor_index, index };
+            let local_variable_table_entry = LocalVariableTableEntry {
+                start_pc,
+                length,
+                name_index,
+                descriptor_index,
+                index,
+            };
             local_variable_table.push(local_variable_table_entry);
             rest = after_index;
         }
@@ -308,7 +357,7 @@ impl ClassReader for [u8] {
         let (attribute_name_index, after_attribute_name_index) = self.read_u16();
         let attribute_name = match constant_pool.get(attribute_name_index as usize).unwrap() {
             ConstantInfo::UTF8(attribute_name) => attribute_name,
-            _ => panic!("attribute_name isn't UTF8")
+            _ => panic!("attribute_name isn't UTF8"),
         };
         let (attribute_length, after_attribute_length) = after_attribute_name_index.read_u32();
 
@@ -319,38 +368,80 @@ impl ClassReader for [u8] {
                 let (code_length, after_code_length) = after_max_locals.read_u32();
                 let (code, after_code) = after_code_length.read_bytes(code_length as usize);
                 let (exception_table, after_exception_table) = after_code.read_exception_table();
-                let (attributes, after_attributes) = after_exception_table.read_attributes(constant_pool);
+                let (attributes, after_attributes) =
+                    after_exception_table.read_attributes(constant_pool);
 
-                (AttributeInfo::Code { max_stack, max_locals, code: code.to_vec(), exception_table, attributes }, after_attributes)
+                (
+                    AttributeInfo::Code {
+                        max_stack,
+                        max_locals,
+                        code: code.to_vec(),
+                        exception_table,
+                        attributes,
+                    },
+                    after_attributes,
+                )
             }
             "ConstantValue" => {
-                let (constantvalue_index, after_constantvalue_index) = after_attribute_length.read_u16();
-                (AttributeInfo::ConstantValue { constantvalue_index }, after_constantvalue_index)
+                let (constantvalue_index, after_constantvalue_index) =
+                    after_attribute_length.read_u16();
+                (
+                    AttributeInfo::ConstantValue {
+                        constantvalue_index,
+                    },
+                    after_constantvalue_index,
+                )
             }
             "Deprecated" => (AttributeInfo::Deprecated, after_attribute_length),
             "Exceptions" => {
-                let (exception_index_table, after_exception_index_table) = after_attribute_length.read_u16s();
-                (AttributeInfo::Exceptions { exception_index_table }, after_exception_index_table)
+                let (exception_index_table, after_exception_index_table) =
+                    after_attribute_length.read_u16s();
+                (
+                    AttributeInfo::Exceptions {
+                        exception_index_table,
+                    },
+                    after_exception_index_table,
+                )
             }
             "SourceFile" => {
                 let (sourcefile_index, after_sourcefile_index) = after_attribute_length.read_u16();
-                (AttributeInfo::SourceFile { sourcefile_index }, after_sourcefile_index)
+                (
+                    AttributeInfo::SourceFile { sourcefile_index },
+                    after_sourcefile_index,
+                )
             }
             "Synthetic" => (AttributeInfo::Synthetic {}, after_attribute_length),
 
             "LineNumberTable" => {
-                let (line_number_table, after_line_number_table) = after_attribute_length.read_line_number_table();
-                (AttributeInfo::LineNumberTable { line_number_table }, after_line_number_table)
+                let (line_number_table, after_line_number_table) =
+                    after_attribute_length.read_line_number_table();
+                (
+                    AttributeInfo::LineNumberTable { line_number_table },
+                    after_line_number_table,
+                )
             }
 
             "LocalVariableTable" => {
-                let (local_variable_table, after_local_variable_table) = after_attribute_length.read_local_variable_table();
-                (AttributeInfo::LocalVariableTable { local_variable_table }, after_local_variable_table)
+                let (local_variable_table, after_local_variable_table) =
+                    after_attribute_length.read_local_variable_table();
+                (
+                    AttributeInfo::LocalVariableTable {
+                        local_variable_table,
+                    },
+                    after_local_variable_table,
+                )
             }
             _ => {
-                let (_, after_attribute_info) = after_attribute_length.read_bytes(attribute_length as usize);
+                let (_, after_attribute_info) =
+                    after_attribute_length.read_bytes(attribute_length as usize);
                 let attribute_name = attribute_name.to_string();
-                (AttributeInfo::Unparsed { attribute_name, attribute_length }, after_attribute_info)
+                (
+                    AttributeInfo::Unparsed {
+                        attribute_name,
+                        attribute_length,
+                    },
+                    after_attribute_info,
+                )
             }
         }
     }
@@ -370,7 +461,10 @@ impl ClassReader for [u8] {
     fn parse(&self) -> ClassFile {
         let (_, after_magic) = self.read_and_check_magic();
         let (version_info, after_version_info) = after_magic.read_and_check_version();
-        let VersionInfo { major_version, minor_version } = version_info;
+        let VersionInfo {
+            major_version,
+            minor_version,
+        } = version_info;
         let (constant_pool, after_constant_pool) = after_version_info.read_constant_pool();
         let (access_flags, after_access_flags) = after_constant_pool.read_access_flags();
         let (this_class, after_this_class) = after_access_flags.read_this_class();
@@ -396,14 +490,13 @@ impl ClassReader for [u8] {
 
 #[cfg(test)]
 mod tests {
+    use classfile::attribute_info::{AttributeInfo, LineNumberTableEntry};
     use classfile::class_file::ClassFile;
     use classfile::class_reader::ClassReader;
-    use std::fs::File;
-    use std::io::Read;
     use classfile::constant_info::ConstantInfo;
     use classfile::member_info::MemberInfo;
-    use classfile::attribute_info::{AttributeInfo, LineNumberTableEntry};
-
+    use std::fs::File;
+    use std::io::Read;
 
     #[test]
     fn parse() {
@@ -428,33 +521,39 @@ mod tests {
         assert_eq!(constant_pool.capacity(), 79);
         match constant_pool.get(1).unwrap() {
             ConstantInfo::Class { name_index } => assert_eq!(*name_index, 49u16),
-            _ => panic!()
+            _ => panic!(),
         };
         match constant_pool.get(9).unwrap() {
-            ConstantInfo::MethodRef { class_index, name_and_type_index } => {
+            ConstantInfo::MethodRef {
+                class_index,
+                name_and_type_index,
+            } => {
                 assert_eq!(class_index.to_owned(), 1 as u16);
                 assert_eq!(name_and_type_index.to_owned(), 59 as u16);
             }
-            _ => panic!()
+            _ => panic!(),
         };
         match constant_pool.get(13).unwrap() {
             ConstantInfo::Integer(value) => assert_eq!(*value, 999999i32),
-            _ => panic!()
+            _ => panic!(),
         };
         match constant_pool.get(22).unwrap() {
             ConstantInfo::UTF8(value) => assert_eq!(value, "registerNatives"),
-            _ => panic!()
+            _ => panic!(),
         };
         match constant_pool.get(50).unwrap() {
-            ConstantInfo::NameAndType { name_index, descriptor_index } => {
+            ConstantInfo::NameAndType {
+                name_index,
+                descriptor_index,
+            } => {
                 assert_eq!(*name_index, 18u16);
                 assert_eq!(*descriptor_index, 19u16);
             }
-            _ => panic!()
+            _ => panic!(),
         };
         match constant_pool.get(77).unwrap() {
             ConstantInfo::UTF8(value) => assert_eq!(value, "(Ljava/lang/String;)V"),
-            _ => panic!()
+            _ => panic!(),
         };
         assert_eq!(access_flags, 33);
         assert_eq!(this_class, 17);
@@ -469,7 +568,7 @@ mod tests {
                 attributes,
                 access_flags: _,
                 name: _,
-                descriptor: _
+                descriptor: _,
             } => {
                 assert_eq!(*name_index, 23u16);
                 assert_eq!(*descriptor_index, 24u16);
@@ -483,7 +582,7 @@ mod tests {
                 attributes,
                 access_flags: _,
                 name: _,
-                descriptor: _
+                descriptor: _,
             } => {
                 assert_eq!(*name_index, 46u16);
                 assert_eq!(*descriptor_index, 19u16);
@@ -494,7 +593,7 @@ mod tests {
                         max_locals,
                         code,
                         exception_table,
-                        attributes
+                        attributes,
                     } => {
                         assert_eq!(*max_stack, 0u16);
                         assert_eq!(*max_locals, 0u16);
@@ -502,34 +601,30 @@ mod tests {
                         assert_eq!(exception_table.len(), 0usize);
                         assert_eq!(attributes.len(), 1usize);
                         match attributes.get(0).unwrap() {
-                            AttributeInfo::LineNumberTable {
-                                line_number_table
-                            } => {
+                            AttributeInfo::LineNumberTable { line_number_table } => {
                                 match line_number_table.get(0).unwrap() {
                                     LineNumberTableEntry {
                                         start_pc,
-                                        line_number
+                                        line_number,
                                     } => {
                                         assert_eq!(*start_pc, 0u16);
                                         assert_eq!(*line_number, 41u16)
                                     }
                                 }
                             }
-                            _ => panic!()
+                            _ => panic!(),
                         }
                     }
-                    _ => panic!()
+                    _ => panic!(),
                 }
             }
         }
         assert_eq!(attributes.len(), 1);
         match attributes.get(0).unwrap() {
-            AttributeInfo::SourceFile {
-                sourcefile_index
-            } => {
+            AttributeInfo::SourceFile { sourcefile_index } => {
                 assert_eq!(*sourcefile_index, 48u16);
             }
-            _ => panic!()
+            _ => panic!(),
         }
     }
 }

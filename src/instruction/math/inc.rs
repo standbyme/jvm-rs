@@ -1,13 +1,15 @@
-use util::code_reader::CodeReader;
-use rtda::frame::Frame;
 use instruction::instruction::ExecuteResult;
-
+use rtda::frame::Frame;
+use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
 pub fn IINC(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
     println!("IINC");
 
-    let Frame { operand_stack, local_vars } = frame;
+    let Frame {
+        operand_stack,
+        local_vars,
+    } = frame;
 
     let (index, code_reader) = code_reader.read_u8();
     let (val_1, code_reader) = code_reader.read_u8();
@@ -18,10 +20,10 @@ pub fn IINC(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let val = val_1 + val_2;
     let local_vars = local_vars.set_int(index, val);
 
-    let frame = Frame { operand_stack, local_vars };
-    let execute_result = ExecuteResult {
-        frame,
-        offset: 0,
+    let frame = Frame {
+        operand_stack,
+        local_vars,
     };
+    let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
 }

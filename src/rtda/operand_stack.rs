@@ -3,13 +3,13 @@ use util::converter;
 
 #[derive(Debug)]
 pub struct OperandStack {
-    vec: Vec<Slot>
+    vec: Vec<Slot>,
 }
 
 impl OperandStack {
     pub fn new(max_stack: usize) -> OperandStack {
         OperandStack {
-            vec: Vec::with_capacity(max_stack)
+            vec: Vec::with_capacity(max_stack),
         }
     }
 
@@ -22,7 +22,7 @@ impl OperandStack {
         let val = self.vec.pop().unwrap();
         match val {
             Slot::Num(val) => (val, self),
-            _ => panic!()
+            _ => panic!(),
         }
     }
 
@@ -36,11 +36,11 @@ impl OperandStack {
     pub fn pop_long(mut self) -> (i64, OperandStack) {
         let b = match self.vec.pop().unwrap() {
             Slot::Num(val) => val,
-            _ => panic!()
+            _ => panic!(),
         };
         let a = match self.vec.pop().unwrap() {
             Slot::Num(val) => val,
-            _ => panic!()
+            _ => panic!(),
         };
         (converter::i32seq_to_i64([a, b]), self)
     }
@@ -55,11 +55,11 @@ impl OperandStack {
     pub fn pop_double(mut self) -> (f64, OperandStack) {
         let b = match self.vec.pop().unwrap() {
             Slot::Num(val) => val,
-            _ => panic!()
+            _ => panic!(),
         };
         let a = match self.vec.pop().unwrap() {
             Slot::Num(val) => val,
-            _ => panic!()
+            _ => panic!(),
         };
         (converter::i32seq_to_f64([a, b]), self)
     }

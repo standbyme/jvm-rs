@@ -12,12 +12,17 @@ pub struct MemberInfo {
 
 impl MemberInfo {
     pub fn get_code_attribute(&self) -> &AttributeInfo {
-        self
-            .attributes
+        self.attributes
             .iter()
             .find(|x| match x {
-                AttributeInfo::Code { max_stack: _, max_locals: _, code: _, exception_table: _, attributes: _ } => true,
-                _ => false
+                AttributeInfo::Code {
+                    max_stack: _,
+                    max_locals: _,
+                    code: _,
+                    exception_table: _,
+                    attributes: _,
+                } => true,
+                _ => false,
             })
             .expect("Code attribute not found")
     }

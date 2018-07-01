@@ -8,10 +8,7 @@ pub struct Stack {
 impl Stack {
     pub fn new(max_size: usize) -> Stack {
         let vec = Vec::with_capacity(max_size);
-        Stack {
-            max_size,
-            vec,
-        }
+        Stack { max_size, vec }
     }
 
     pub fn push(mut self, frame: Frame) -> Stack {

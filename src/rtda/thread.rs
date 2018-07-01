@@ -1,5 +1,5 @@
-use rtda::stack::Stack;
 use rtda::frame::Frame;
+use rtda::stack::Stack;
 
 const STACK_SIZE: usize = 1024;
 
@@ -24,9 +24,7 @@ impl Thread {
     pub fn pop_frame(self) -> (Frame, Thread) {
         let Thread { stack } = self;
         let (frame, stack) = stack.pop();
-        let thread = Thread {
-            stack,
-        };
+        let thread = Thread { stack };
         (frame, thread)
     }
 }

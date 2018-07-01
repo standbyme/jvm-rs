@@ -1,6 +1,6 @@
 extern crate byteorder;
 
-use self::byteorder::{ByteOrder, BigEndian};
+use self::byteorder::{BigEndian, ByteOrder};
 use std;
 
 pub struct CodeReader<'a> {
@@ -10,18 +10,12 @@ pub struct CodeReader<'a> {
 
 impl<'a> CodeReader<'a> {
     pub fn new(code: &Vec<u8>) -> CodeReader {
-        CodeReader {
-            code,
-            pc: 0,
-        }
+        CodeReader { code, pc: 0 }
     }
 
     pub fn set_pc(self, pc: usize) -> CodeReader<'a> {
         let CodeReader { pc: _, code } = self;
-        CodeReader {
-            code,
-            pc,
-        }
+        CodeReader { code, pc }
     }
 
     pub fn read_u8(self) -> (u8, CodeReader<'a>) {

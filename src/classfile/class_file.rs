@@ -1,6 +1,6 @@
+use classfile::attribute_info::AttributeInfo;
 use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
-use classfile::attribute_info::AttributeInfo;
 
 #[derive(Debug)]
 pub struct ClassFile {
@@ -18,8 +18,7 @@ pub struct ClassFile {
 
 impl ClassFile {
     pub fn get_main_method<'a>(&'a self) -> &'a MemberInfo {
-        self
-            .methods
+        self.methods
             .iter()
             .find(|x| x.name == "main" && x.descriptor == "([Ljava/lang/String;)V")
             .expect("Main method not found")
