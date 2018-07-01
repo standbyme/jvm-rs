@@ -11,7 +11,6 @@ use jvm::util::code_reader::CodeReader;
 
 use std::fs::File;
 use std::io::Read;
-use std::{thread, time};
 
 fn main() {
     let path: &str = "src/test_data/GaussTest.class";
@@ -41,7 +40,7 @@ fn interpret(method_info: &MemberInfo) {
 }
 
 fn execute(thread: Thread, code: &Vec<u8>) {
-    let (frame, thread) = thread.pop_frame();
+    let (frame, _) = thread.pop_frame();
     let mut mut_code_reader = CodeReader::new(code);
     let mut mut_frame = frame;
     let mut mut_pc = 0usize;
@@ -58,7 +57,7 @@ fn execute(thread: Thread, code: &Vec<u8>) {
 
         mut_pc = match offset {
             0 => after_execute.pc,
-            i => (pc as isize + offset) as usize,
+            i => (pc as isize + i) as usize,
         };
 
         println!("pc: {}", pc);
