@@ -11,23 +11,27 @@ fn _istore(frame: Frame, index: usize) -> Frame {
 
 
 #[allow(non_snake_case)]
-fn ISTORE_1(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn ISTORE_1(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("ISTORE_1");
+
     let frame = _istore(frame, 1);
 
     let execute_result = ExecuteResult {
         frame,
         offset: 0,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-fn ISTORE_2(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn ISTORE_2(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("ISTORE_2");
+
     let frame = _istore(frame, 2);
 
     let execute_result = ExecuteResult {
         frame,
         offset: 0,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
 }

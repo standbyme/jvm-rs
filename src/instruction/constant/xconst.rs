@@ -4,7 +4,8 @@ use instruction::instruction::ExecuteResult;
 
 
 #[allow(non_snake_case)]
-fn DCONST_0(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn DCONST_0(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("DCONST_0");
     let Frame { operand_stack, local_vars } = frame;
     let operand_stack = operand_stack.push_double(0f64);
     let local_vars = local_vars;
@@ -14,11 +15,13 @@ fn DCONST_0(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
         frame,
         offset: 0,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-fn ICONST_0(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn ICONST_0(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("ICONST_0");
+
     let Frame { operand_stack, local_vars } = frame;
     let operand_stack = operand_stack.push_int(0);
     let local_vars = local_vars;
@@ -28,11 +31,13 @@ fn ICONST_0(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
         frame,
         offset: 0,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-fn ICONST_1(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn ICONST_1(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("ICONST_1");
+
     let Frame { operand_stack, local_vars } = frame;
     let operand_stack = operand_stack.push_int(1);
     let local_vars = local_vars;
@@ -42,5 +47,21 @@ fn ICONST_1(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
         frame,
         offset: 0,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
+}
+
+#[allow(non_snake_case)]
+pub fn ICONST_3(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("ICONST_3");
+
+    let Frame { operand_stack, local_vars } = frame;
+    let operand_stack = operand_stack.push_int(3);
+    let local_vars = local_vars;
+    let frame = Frame { operand_stack, local_vars };
+
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, code_reader)
 }

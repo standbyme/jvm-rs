@@ -3,6 +3,7 @@ use rtda::operand_stack::OperandStack;
 use rtda::slot::Slot;
 use vec_map::VecMap;
 
+#[derive(Debug)]
 pub struct Frame {
     pub local_vars: LocalVars,
     pub operand_stack: OperandStack,

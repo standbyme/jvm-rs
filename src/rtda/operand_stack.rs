@@ -1,6 +1,7 @@
 use rtda::slot::Slot;
 use util::converter;
 
+#[derive(Debug)]
 pub struct OperandStack {
     vec: Vec<Slot>
 }

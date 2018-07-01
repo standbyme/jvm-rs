@@ -1,2 +1,2 @@
-mod add;
-mod inc;
+pub mod add;
+pub mod inc;

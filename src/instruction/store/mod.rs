@@ -1,1 +1,1 @@
-mod istore;
+pub mod istore;

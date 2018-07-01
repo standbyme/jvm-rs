@@ -4,11 +4,13 @@ use instruction::instruction::ExecuteResult;
 
 
 #[allow(non_snake_case)]
-fn IINC(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn IINC(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IINC");
+
     let Frame { operand_stack, local_vars } = frame;
 
-    let (index, reader) = reader.read_u8();
-    let (val_1, reader) = reader.read_u8();
+    let (index, code_reader) = code_reader.read_u8();
+    let (val_1, code_reader) = code_reader.read_u8();
     let index = index as usize;
     let val_1 = val_1 as i32;
 
@@ -21,5 +23,5 @@ fn IINC(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
         frame,
         offset: 0,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
 }

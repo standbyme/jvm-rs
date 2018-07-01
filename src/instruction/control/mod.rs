@@ -1,1 +1,1 @@
-mod goto;
+pub mod goto;

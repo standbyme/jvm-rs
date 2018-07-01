@@ -3,10 +3,12 @@ use rtda::frame::Frame;
 use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
-fn BIPUSH(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn BIPUSH(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("BIPUSH");
+
     let Frame { operand_stack, local_vars } = frame;
 
-    let (val, reader) = reader.read_i8();
+    let (val, code_reader) = code_reader.read_i8();
     let i = val;
     let operand_stack = operand_stack.push_int(i as i32);
 
@@ -15,5 +17,5 @@ fn BIPUSH(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
         frame,
         offset: 0,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
 }

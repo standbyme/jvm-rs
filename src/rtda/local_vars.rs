@@ -4,6 +4,7 @@ use self::vec_map::VecMap;
 
 use rtda::slot::Slot;
 
+#[derive(Debug)]
 pub struct LocalVars {
     vec_map: VecMap<Slot>
 }

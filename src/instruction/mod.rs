@@ -1,6 +1,6 @@
 mod comparison;
 mod constant;
-mod instruction;
+pub mod instruction;
 mod load;
 mod math;
 mod store;

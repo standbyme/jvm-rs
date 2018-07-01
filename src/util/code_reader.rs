@@ -5,7 +5,7 @@ use std;
 
 pub struct CodeReader<'a> {
     code: &'a Vec<u8>,
-    pc: usize,
+    pub pc: usize,
 }
 
 impl<'a> CodeReader<'a> {
@@ -52,7 +52,7 @@ impl<'a> CodeReader<'a> {
 
     pub fn read_i16(self) -> (i16, CodeReader<'a>) {
         let CodeReader { pc, code } = self;
-        let seq = &code[pc..(pc + 1)];
+        let seq = &code[pc..(pc + 2)];
         let val = BigEndian::read_i16(&seq);
         let pc = pc + 2;
         let code_reader = CodeReader { pc, code };

@@ -3,7 +3,9 @@ use rtda::frame::Frame;
 use instruction::instruction::ExecuteResult;
 
 #[allow(non_snake_case)]
-fn IADD(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn IADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IADD");
+
     let Frame { operand_stack, local_vars } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_int();
@@ -16,5 +18,5 @@ fn IADD(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
         frame,
         offset: 0,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
 }

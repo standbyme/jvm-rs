@@ -14,8 +14,9 @@ fn _icmpPop(frame: Frame) -> (i32, i32, Frame) {
 }
 
 #[allow(non_snake_case)]
-pub fn IF_ICMPGT(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    let (offset, reader) = reader.read_i16();
+pub fn IF_ICMPGT(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IF_ICMPGT");
+    let (offset, code_reader) = code_reader.read_i16();
 
     let (val1, val2, frame) = _icmpPop(frame);
     let offset = if val1 > val2 {
@@ -28,5 +29,5 @@ pub fn IF_ICMPGT(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
         frame,
         offset,
     };
-    (execute_result, reader)
+    (execute_result, code_reader)
 }
