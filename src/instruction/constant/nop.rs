@@ -1,17 +1,12 @@
-use instruction::instruction::Instruction;
 use util::code_reader::CodeReader;
 use rtda::frame::Frame;
+use instruction::instruction::ExecuteResult;
 
-pub struct NOP {}
-
-impl Instruction for NOP {
-    fn execute(&self, frame: Frame) -> Frame {
-        frame
-    }
-}
-
-impl NOP {
-    pub fn new(_reader: CodeReader) -> Box<dyn Instruction> {
-        Box::new(NOP {})
-    }
+#[allow(non_snake_case)]
+fn NOP(reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    let execute_result = ExecuteResult {
+        frame,
+        offset: 0,
+    };
+    (execute_result, reader)
 }
