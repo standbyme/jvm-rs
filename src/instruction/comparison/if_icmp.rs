@@ -31,7 +31,7 @@ pub fn IF_ICMPGT(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeR
     (execute_result, code_reader)
 }
 
-
+#[allow(non_snake_case)] 
 pub fn IF_ICMPGE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
 	println!("IF_ICMPGE");
     let (offset, code_reader) = code_reader.read_i16();
@@ -40,10 +40,10 @@ pub fn IF_ICMPGE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeR
     let offset = if val1 >= val2 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
-    (execute_result, code_reader}
-
+    (execute_result, code_reader) 
 }
 
+#[allow(non_snake_case)] 
 pub fn IF_ICMPEQ(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
 	println!("IF_ICMPEQ");
     let (offset, code_reader) = code_reader.read_i16();
@@ -52,11 +52,10 @@ pub fn IF_ICMPEQ(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeR
     let offset = if val1 == val2 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
-    (execute_result, code_reader}
-
+    (execute_result, code_reader) 
 }
 
-
+#[allow(non_snake_case)] 
 pub fn IF_ICMPNE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
 	println!("IF_ICMPNE");
     let (offset, code_reader) = code_reader.read_i16();
@@ -65,10 +64,10 @@ pub fn IF_ICMPNE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeR
     let offset = if val1 != val2 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
-    (execute_result, code_reader};
-
+    (execute_result, code_reader) 
 }
 
+#[allow(non_snake_case)] 
 pub fn IF_ICMPLT(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
 	println!("IF_ICMPLT");
     let (offset, code_reader) = code_reader.read_i16();
@@ -77,10 +76,10 @@ pub fn IF_ICMPLT(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeR
     let offset = if val1 < val2 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
-    (execute_result, code_reader}
-
+    (execute_result, code_reader) 
 }
 
+#[allow(non_snake_case)] 
 pub fn IF_ICMPLE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
 	println!("IF_ICMPLE");
     let (offset, code_reader) = code_reader.read_i16();
@@ -89,8 +88,7 @@ pub fn IF_ICMPLE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeR
     let offset = if val1 <= val2 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
-    (execute_result, code_reader}
-
+    (execute_result, code_reader) 
 }
 
 
