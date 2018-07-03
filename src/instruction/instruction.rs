@@ -1,5 +1,5 @@
-use instruction::comparison::if_icmp::*;
 use instruction::comparison::dcmp::*;
+use instruction::comparison::if_icmp::*;
 use instruction::constant::nop::NOP;
 use instruction::constant::xconst::*;
 use instruction::constant::xipush::*;
@@ -29,18 +29,18 @@ pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteRes
         0x1c => ILOAD_2,
         0x60 => IADD,
         0x84 => IINC,
-		0x97 => DCMPL,
-		0x98 => DCMPG,
-		0x9f => IF_ICMPEQ,
-		0xa0 => IF_ICMPNE,
-		0xa1 => IF_ICMPLT,
-		0xa2 => IF_ICMPGE,
-		0xa3 => IF_ICMPGT,
-		0xa4 => IF_ICMPLE,
+        0x97 => DCMPL,
+        0x98 => DCMPG,
+        0x9f => IF_ICMPEQ,
+        0xa0 => IF_ICMPNE,
+        0xa1 => IF_ICMPLT,
+        0xa2 => IF_ICMPGE,
+        0xa3 => IF_ICMPGT,
+        0xa4 => IF_ICMPLE,
         0xa7 => GOTO,
         _ => {
             println!("{:?}", frame);
-            panic!("Unsupported opcode : {:X}",opcode)
+            panic!("Unsupported opcode : {:X}", opcode)
         }
     };
 

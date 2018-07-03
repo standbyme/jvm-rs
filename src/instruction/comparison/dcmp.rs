@@ -2,8 +2,6 @@ use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
 use util::code_reader::CodeReader;
 
-
-
 #[allow(non_snake_case)]
 fn _dcmp(frame: Frame) -> (f64, f64, Frame) {
     let Frame {
@@ -18,30 +16,29 @@ fn _dcmp(frame: Frame) -> (f64, f64, Frame) {
         operand_stack,
         local_vars,
     };
-    (val1, val2, frame) 
+    (val1, val2, frame)
 }
 
-
+#[allow(non_snake_case)]
 pub fn DCMPG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    println!("DCMPG"); 
+    println!("DCMPG");
     let (offset, code_reader) = code_reader.read_i16();
 
-    let(val1, val2, frame) = _dcmp(frame);
-    let offset = if val1 > val2 {offset as isize} else {0};
+    let (val1, val2, frame) = _dcmp(frame);
+    let offset = if val1 > val2 { offset as isize } else { 0 };
 
-    let execute_result = ExecuteResult{ frame, offset };
+    let execute_result = ExecuteResult { frame, offset };
     (execute_result, code_reader)
 }
 
+#[allow(non_snake_case)]
 pub fn DCMPL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    println!("DCMPG"); 
+    println!("DCMPG");
     let (offset, code_reader) = code_reader.read_i16();
 
-    let(val1, val2, frame) = _dcmp(frame);
-    let offset = if val1 < val2 {offset as isize} else {0};
+    let (val1, val2, frame) = _dcmp(frame);
+    let offset = if val1 < val2 { offset as isize } else { 0 };
 
-    let execute_result = ExecuteResult{ frame, offset };
+    let execute_result = ExecuteResult { frame, offset };
     (execute_result, code_reader)
 }
-
-
