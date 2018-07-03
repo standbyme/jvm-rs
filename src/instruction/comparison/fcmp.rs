@@ -1,10 +1,9 @@
-
 use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
 use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
-fn _fcmp(frame: Frame, flag : bool) -> (f32, f32, Frame) {
+fn _fcmp(frame: Frame, flag: bool) -> (f32, f32, Frame) {
     let Frame {
         operand_stack,
         local_vars,
@@ -13,7 +12,7 @@ fn _fcmp(frame: Frame, flag : bool) -> (f32, f32, Frame) {
     let (val2, operand_stack) = operand_stack.pop_float();
     let (val1, operand_stack) = operand_stack.pop_float();
 
-    let operand_stack = if val1 < val2 { 
+    let operand_stack = if val1 < val2 {
         operand_stack.push_int(-1)
     } else if val1 > val2 {
         operand_stack.push_int(1)
@@ -37,7 +36,7 @@ pub fn FCMPG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReade
     println!("FCMPG");
 
     let (_, _, frame) = _fcmp(frame, true);
-    let execute_result = ExecuteResult { frame, offset : 0 };
+    let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
 }
 
@@ -46,7 +45,7 @@ pub fn FCMPL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReade
     println!("FCMPL");
 
     let (_, _, frame) = _fcmp(frame, false);
-    let execute_result = ExecuteResult { frame, offset : 0 };
+    let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
 }
 
@@ -60,38 +59,38 @@ mod tests {
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_FCMPL() { 
+    fn test_FCMPL() {
         let frame = create_frame(0f32, 1f32);
-        let (ExecuteResult { frame, offset : _ }, _) = FCMPL(CodeReader::new(&vec![]), frame);
+        let (ExecuteResult { frame, offset: _ }, _) = FCMPL(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, -1);
     }
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_FCMPG() { 
+    fn test_FCMPG() {
         let frame = create_frame(2f32, 1f32);
-        let (ExecuteResult { frame, offset : _ }, _) = FCMPG(CodeReader::new(&vec![]), frame);
+        let (ExecuteResult { frame, offset: _ }, _) = FCMPG(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 1);
     }
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_FCMPG_equal() { 
+    fn test_FCMPG_equal() {
         let frame = create_frame(2.345f32, 2.345f32);
-        let (ExecuteResult { frame, offset : _ }, _) = FCMPG(CodeReader::new(&vec![]), frame);
+        let (ExecuteResult { frame, offset: _ }, _) = FCMPG(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 0);
     }
 
-    fn create_frame(op1 : f32, op2 : f32) -> Frame {
+    fn create_frame(op1: f32, op2: f32) -> Frame {
         let os = OperandStack::new(10);
         let os = os.push_float(op1);
         let os = os.push_float(op2);
         Frame {
-            local_vars : LocalVars::new(10),
-            operand_stack : os
+            local_vars: LocalVars::new(10),
+            operand_stack: os,
         }
     }
 }

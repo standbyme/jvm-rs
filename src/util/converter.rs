@@ -1,5 +1,13 @@
 use std;
 
+pub fn i32_to_f32(val: i32) -> f32 {
+    unsafe { std::mem::transmute::<i32, f32>(val) }
+}
+
+pub fn f32_to_i32(val: f32) -> i32 {
+    unsafe { std::mem::transmute::<f32, i32>(val) }
+}
+
 pub fn i64_to_i32seq(val: i64) -> [i32; 2] {
     unsafe { std::mem::transmute::<i64, [i32; 2]>(val) }
 }

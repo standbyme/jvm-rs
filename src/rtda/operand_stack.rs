@@ -65,14 +65,15 @@ impl OperandStack {
     }
 
     pub fn push_float(mut self, val: f32) -> OperandStack {
-        self.vec.push(Slot::Num(val as i32));
+        let val = converter::f32_to_i32(val);
+        self.vec.push(Slot::Num(val));
         self
     }
 
     pub fn pop_float(mut self) -> (f32, OperandStack) {
         let val = self.vec.pop().unwrap();
         match val {
-            Slot::Num(val) => (val as f32, self),
+            Slot::Num(val) => (converter::i32_to_f32(val), self),
             _ => panic!(),
         }
     }
