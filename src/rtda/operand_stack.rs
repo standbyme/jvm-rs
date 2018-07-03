@@ -63,4 +63,17 @@ impl OperandStack {
         };
         (converter::i32seq_to_f64([a, b]), self)
     }
+
+    pub fn push_float(mut self, val: f32) -> OperandStack {
+        self.vec.push(Slot::Num(val as i32));
+        self
+    }
+
+    pub fn pop_float(mut self) -> (f32, OperandStack) {
+        let val = self.vec.pop().unwrap();
+        match val {
+            Slot::Num(val) => (val as f32, self),
+            _ => panic!(),
+        }
+    }
 }
