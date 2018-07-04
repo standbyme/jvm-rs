@@ -43,6 +43,9 @@ mod tests {
         let operand_stack = operand_stack.push_double(2.71828182845f64);
         let operand_stack = operand_stack.push_int(-100);
         let operand_stack = operand_stack.push_long(2997924580);
+        let operand_stack = operand_stack.push_float(3.1415926);
+        let (val, operand_stack) = operand_stack.pop_float();
+        assert_eq!(val, 3.1415926);
         let (val, operand_stack) = operand_stack.pop_long();
         assert_eq!(val, 2997924580);
         let (val, operand_stack) = operand_stack.pop_int();

@@ -1,7 +1,7 @@
 pub mod frame;
 mod heap;
-mod local_vars;
-mod operand_stack;
+pub mod local_vars;
+pub mod operand_stack;
 mod slot;
 mod stack;
 pub mod thread;
