@@ -8,7 +8,7 @@ A JVM on Rust under development.
 Strive to achieve 
 - **Clear** structure.
 - Well **tested**
-- Minimal(or No) Unsafe
+- Minimal Unsafe(**Only** [src/util/converter.rs](https://github.com/standbyme/jvm-rs/blob/master/src/util/converter.rs) has unsafe code)
 - Minimal Mutable
 - Functional Programming
 
