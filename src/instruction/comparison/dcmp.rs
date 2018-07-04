@@ -1,7 +1,6 @@
 use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
 use util::code_reader::CodeReader;
-use std::f64;
 
 #[allow(non_snake_case)]
 fn _dcmp(frame: Frame, flag: bool) -> (f64, f64, Frame) {
