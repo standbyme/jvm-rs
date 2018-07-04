@@ -38,8 +38,8 @@ pub struct ClassPath {
 }
 
 impl ClassPath {
-    pub fn read_class(&self, classname: &str) -> Result<Vec<u8>, io::Error> {
-        let class_file_name = classname.replace('.', "/") + ".class";
+    pub fn read_class(&self, name: &str) -> Result<Vec<u8>, io::Error> {
+        let class_file_name = name.replace('.', "/") + ".class";
         self.user.read_class(class_file_name)
     }
 }

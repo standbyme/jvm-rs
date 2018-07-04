@@ -215,7 +215,7 @@ impl ClassReader for [u8] {
 
     fn read_constant_pool(&self) -> (ConstantPool, &[u8]) {
         let (count, after_count) = self.read_u16();
-        let mut constant_pool: VecMap<ConstantInfo> = VecMap::with_capacity((count + 1) as usize);
+        let mut constant_pool: ConstantPool = ConstantPool { vec_map: VecMap::with_capacity((count + 1) as usize) };
 
         let mut i: usize = 1;
         let mut rest: &[u8] = after_count;
@@ -255,11 +255,11 @@ impl ClassReader for [u8] {
         let (name_index, after_name_index) = after_access_flags.read_u16();
         let (descriptor_index, after_descriptor_index) = after_name_index.read_u16();
         let (attributes, after_attributes) = after_descriptor_index.read_attributes(constant_pool);
-        let name = match constant_pool[name_index as usize] {
+        let name = match constant_pool.get(name_index as usize) {
             ConstantInfo::UTF8(ref name) => name.to_owned(),
             _ => panic!("name isn't UTF8"),
         };
-        let descriptor = match constant_pool[descriptor_index as usize] {
+        let descriptor = match constant_pool.get(descriptor_index as usize) {
             ConstantInfo::UTF8(ref descriptor) => descriptor.to_owned(),
             _ => panic!("descriptor isn't UTF8"),
         };
@@ -355,7 +355,7 @@ impl ClassReader for [u8] {
 
     fn read_attribute(&self, constant_pool: &ConstantPool) -> (AttributeInfo, &[u8]) {
         let (attribute_name_index, after_attribute_name_index) = self.read_u16();
-        let attribute_name = match constant_pool.get(attribute_name_index as usize).unwrap() {
+        let attribute_name = match constant_pool.get(attribute_name_index as usize) {
             ConstantInfo::UTF8(attribute_name) => attribute_name,
             _ => panic!("attribute_name isn't UTF8"),
         };
@@ -519,11 +519,11 @@ mod tests {
         assert_eq!(major_version, 52);
         assert_eq!(minor_version, 0);
         assert_eq!(constant_pool.capacity(), 79);
-        match constant_pool.get(1).unwrap() {
+        match constant_pool.get(1) {
             ConstantInfo::Class { name_index } => assert_eq!(*name_index, 49u16),
             _ => panic!(),
         };
-        match constant_pool.get(9).unwrap() {
+        match constant_pool.get(9) {
             ConstantInfo::MethodRef {
                 class_index,
                 name_and_type_index,
@@ -533,15 +533,15 @@ mod tests {
             }
             _ => panic!(),
         };
-        match constant_pool.get(13).unwrap() {
+        match constant_pool.get(13) {
             ConstantInfo::Integer(value) => assert_eq!(*value, 999999i32),
             _ => panic!(),
         };
-        match constant_pool.get(22).unwrap() {
+        match constant_pool.get(22) {
             ConstantInfo::UTF8(value) => assert_eq!(value, "registerNatives"),
             _ => panic!(),
         };
-        match constant_pool.get(50).unwrap() {
+        match constant_pool.get(50) {
             ConstantInfo::NameAndType {
                 name_index,
                 descriptor_index,
@@ -551,7 +551,7 @@ mod tests {
             }
             _ => panic!(),
         };
-        match constant_pool.get(77).unwrap() {
+        match constant_pool.get(77) {
             ConstantInfo::UTF8(value) => assert_eq!(value, "(Ljava/lang/String;)V"),
             _ => panic!(),
         };
