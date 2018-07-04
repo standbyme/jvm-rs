@@ -1,6 +1,6 @@
-use vec_map::VecMap;
-use std::ops::Index;
 use classfile::constant_info::ConstantInfo;
+use std::ops::Index;
+use vec_map::VecMap;
 
 #[derive(Debug)]
 pub struct ConstantPool {
@@ -13,7 +13,7 @@ impl ConstantPool {
     }
 
     pub fn get(&self, index: usize) -> &ConstantInfo {
-        self.vec_map.get(index).unwrap()
+        self.vec_map.get(index).expect("Bad constant pool index")
     }
 
     pub fn capacity(&self) -> usize {

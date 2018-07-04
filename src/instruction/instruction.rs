@@ -1,7 +1,7 @@
 use instruction::comparison::dcmp::*;
 use instruction::comparison::fcmp::*;
-use instruction::comparison::lcmp::*;
 use instruction::comparison::if_icmp::*;
+use instruction::comparison::lcmp::*;
 use instruction::constant::nop::NOP;
 use instruction::constant::xconst::*;
 use instruction::constant::xipush::*;

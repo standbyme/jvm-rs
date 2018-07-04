@@ -215,7 +215,9 @@ impl ClassReader for [u8] {
 
     fn read_constant_pool(&self) -> (ConstantPool, &[u8]) {
         let (count, after_count) = self.read_u16();
-        let mut constant_pool: ConstantPool = ConstantPool { vec_map: VecMap::with_capacity((count + 1) as usize) };
+        let mut constant_pool: ConstantPool = ConstantPool {
+            vec_map: VecMap::with_capacity((count + 1) as usize),
+        };
 
         let mut i: usize = 1;
         let mut rest: &[u8] = after_count;
