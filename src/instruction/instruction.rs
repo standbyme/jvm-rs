@@ -1,5 +1,6 @@
 use instruction::comparison::dcmp::*;
 use instruction::comparison::fcmp::*;
+use instruction::comparison::lcmp::*;
 use instruction::comparison::if_icmp::*;
 use instruction::constant::nop::NOP;
 use instruction::constant::xconst::*;
@@ -30,6 +31,7 @@ pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteRes
         0x3d => ISTORE_2,
         0x60 => IADD,
         0x84 => IINC,
+        0x94 => LCMP,
         0x95 => FCMPL,
         0x96 => FCMPG,
         0x97 => DCMPL,
