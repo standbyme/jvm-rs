@@ -76,3 +76,47 @@ pub fn ICONST_3(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeRe
     let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
 }
+
+#[cfg(test)]
+mod tests {
+    use instruction::constant::xconst::*;
+    use instruction::instruction::ExecuteResult;
+    use rtda::frame::Frame;
+    use util::code_reader::CodeReader;
+
+    #[test]
+    #[allow(non_snake_case)]
+    fn test_DCONST_0() {
+        let frame = Frame::new(10, 10);
+        let (ExecuteResult { frame, offset: _ }, _) = DCONST_0(CodeReader::new(&vec![]), frame);
+        let (val, _) = frame.operand_stack.pop_double();
+        assert_eq!(val, 0f64);
+    }
+
+    #[test]
+    #[allow(non_snake_case)]
+    fn test_ICONST_0() {
+        let frame = Frame::new(10, 10);
+        let (ExecuteResult { frame, offset: _ }, _) = ICONST_0(CodeReader::new(&vec![]), frame);
+        let (val, _) = frame.operand_stack.pop_int();
+        assert_eq!(val, 0);
+    }
+
+    #[test]
+    #[allow(non_snake_case)]
+    fn test_ICONST_1() {
+        let frame = Frame::new(10, 10);
+        let (ExecuteResult { frame, offset: _ }, _) = ICONST_1(CodeReader::new(&vec![]), frame);
+        let (val, _) = frame.operand_stack.pop_int();
+        assert_eq!(val, 1);
+    }
+
+    #[test]
+    #[allow(non_snake_case)]
+    fn test_ICONST_3() {
+        let frame = Frame::new(10, 10);
+        let (ExecuteResult { frame, offset: _ }, _) = ICONST_3(CodeReader::new(&vec![]), frame);
+        let (val, _) = frame.operand_stack.pop_int();
+        assert_eq!(val, 3);
+    }
+}
