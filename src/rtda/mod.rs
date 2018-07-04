@@ -1,4 +1,5 @@
 pub mod frame;
+mod heap;
 mod local_vars;
 mod operand_stack;
 mod slot;
