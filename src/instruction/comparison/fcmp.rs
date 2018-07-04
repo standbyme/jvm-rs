@@ -85,12 +85,12 @@ mod tests {
     }
 
     fn create_frame(op1: f32, op2: f32) -> Frame {
-        let os = OperandStack::new(10);
-        let os = os.push_float(op1);
-        let os = os.push_float(op2);
+        let operand_stack = OperandStack::new(10);
+        let operand_stack = operand_stack.push_float(op1);
+        let operand_stack = operand_stack.push_float(op2);
         Frame {
             local_vars: LocalVars::new(10),
-            operand_stack: os,
+            operand_stack: operand_stack,
         }
     }
 }
