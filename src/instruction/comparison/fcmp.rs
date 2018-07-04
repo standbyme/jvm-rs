@@ -60,7 +60,7 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_FCMPL() {
-        let frame = create_frame(0f32, 1f32);
+        let frame = create_frame(0.03, 0.042);
         let (ExecuteResult { frame, offset: _ }, _) = FCMPL(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, -1);
@@ -69,7 +69,7 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_FCMPG() {
-        let frame = create_frame(2f32, 1f32);
+        let frame = create_frame(1.21, 1.1);
         let (ExecuteResult { frame, offset: _ }, _) = FCMPG(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 1);
@@ -78,7 +78,7 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_FCMPG_equal() {
-        let frame = create_frame(2.345f32, 2.345f32);
+        let frame = create_frame(2.345, 2.345);
         let (ExecuteResult { frame, offset: _ }, _) = FCMPG(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 0);
