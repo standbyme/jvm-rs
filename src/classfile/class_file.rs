@@ -25,23 +25,16 @@ impl ClassFile {
             .expect("Main method not found")
     }
 
-    fn get_constant_info(&self, index: usize) -> &ConstantInfo {
-        self.constant_pool.get(index)
+    pub fn get_class_name(&self) -> &str {
+        self.constant_pool.get_class_name(self.this_class as usize)
     }
 
-    fn get_utf8(&self, index: usize) -> &str {
-        match self.get_constant_info(index) {
-            ConstantInfo::UTF8(ref name) => name,
-            _ => panic!("index isn't to UTF8"),
+    pub fn get_super_class_name(&self) -> &str {
+        let super_class = self.super_class as usize;
+        if super_class > 0 {
+            self.constant_pool.get_class_name(super_class)
+        } else {
+            ""
         }
-    }
-
-    pub fn get_class_name(&self, index: usize) -> &str {
-        let constant_info = self.get_constant_info(index);
-        let name_index = match constant_info {
-            ConstantInfo::Class { name_index } => name_index,
-            _ => panic!("index isn't to Class"),
-        };
-        self.get_utf8(*name_index as usize)
     }
 }

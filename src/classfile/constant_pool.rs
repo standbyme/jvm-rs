@@ -19,4 +19,20 @@ impl ConstantPool {
     pub fn capacity(&self) -> usize {
         self.vec_map.capacity()
     }
+
+    fn get_utf8(&self, index: usize) -> &str {
+        match self.get(index) {
+            ConstantInfo::UTF8(ref name) => name,
+            _ => panic!("index isn't to UTF8"),
+        }
+    }
+
+    pub fn get_class_name(&self, index: usize) -> &str {
+        let constant_info = self.get(index);
+        let name_index = match constant_info {
+            ConstantInfo::Class { name_index } => name_index,
+            _ => panic!("index isn't to Class"),
+        };
+        self.get_utf8(*name_index as usize)
+    }
 }

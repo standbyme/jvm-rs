@@ -1,13 +1,14 @@
 use classfile::class_file::ClassFile;
 use classfile::constant_pool::ConstantPool;
+use rtda::heap::class_loader::ClassLoader;
 use rtda::heap::field::Field;
 use rtda::heap::method::Method;
 
-pub struct Class {
+pub struct Class<'a> {
     access_flags: u16,
-    name: String,
-    super_class_name: String,
-    interface_names: Vec<String>,
+    pub name: &'a str,
+    super_class_name: &'a str,
+    //    interface_names: Vec<String>,
     //    constant_pool: ConstantPool,
     //    fields: Field,
     //    methods: Method,
@@ -19,16 +20,13 @@ pub struct Class {
     //    staticVars        Slots,
 }
 
-//impl Class {
-//    fn new(class_file: ClassFile) -> Class {
-//        let ClassFile {
-//            access_flags,
-//            super_class_name,
-//        } = class_file;
+//impl<'a> Class<'a> {
+//    pub fn new(class_file: ClassFile, class_loader: &ClassLoader) -> Class<'a> {
+//        let access_flags = class_file.access_flags;
 //        Class {
 //            access_flags,
-//
-//            super_class_name,
+//            name: class_file.get_class_name(),
+//            super_class_name: class_file.get_super_class_name(),
 //        }
 //    }
 //}
