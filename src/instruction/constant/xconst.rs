@@ -20,7 +20,7 @@ pub fn DCONST_0(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeRe
     (execute_result, code_reader)
 }
 
-#[allow(non_snake_case)] 
+#[allow(non_snake_case)]
 pub fn DCONST_1(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
     println!("DCONST_1");
     let Frame {
@@ -109,7 +109,7 @@ pub fn ICONST_M1(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeR
 
     let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
-} 
+}
 
 #[allow(non_snake_case)]
 pub fn ICONST_0(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
@@ -204,7 +204,7 @@ pub fn ICONST_4(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeRe
 
     let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
-} 
+}
 
 #[allow(non_snake_case)]
 pub fn ICONST_5(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
@@ -223,7 +223,7 @@ pub fn ICONST_5(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeRe
 
     let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
-} 
+}
 
 #[allow(non_snake_case)]
 pub fn LCONST_0(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
@@ -242,7 +242,7 @@ pub fn LCONST_0(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeRe
 
     let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
-} 
+}
 
 #[allow(non_snake_case)]
 pub fn LCONST_1(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
@@ -261,7 +261,7 @@ pub fn LCONST_1(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeRe
 
     let execute_result = ExecuteResult { frame, offset: 0 };
     (execute_result, code_reader)
-} 
+}
 
 #[cfg(test)]
 mod tests {
@@ -295,7 +295,7 @@ mod tests {
         let (ExecuteResult { frame, offset: _ }, _) = FCONST_0(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_float();
         assert_eq!(val, 0f32);
-    } 
+    }
 
     #[test]
     #[allow(non_snake_case)]
@@ -304,7 +304,7 @@ mod tests {
         let (ExecuteResult { frame, offset: _ }, _) = FCONST_1(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_float();
         assert_eq!(val, 1f32);
-    } 
+    }
 
     #[test]
     #[allow(non_snake_case)]
@@ -322,7 +322,7 @@ mod tests {
         let (ExecuteResult { frame, offset: _ }, _) = ICONST_M1(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, -1);
-    } 
+    }
 
     #[test]
     #[allow(non_snake_case)]
@@ -349,7 +349,7 @@ mod tests {
         let (ExecuteResult { frame, offset: _ }, _) = ICONST_2(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 2);
-    } 
+    }
 
     #[test]
     #[allow(non_snake_case)]
@@ -394,5 +394,5 @@ mod tests {
         let (ExecuteResult { frame, offset: _ }, _) = LCONST_1(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_long();
         assert_eq!(val, 1i64);
-    } 
+    }
 }

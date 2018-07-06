@@ -31,11 +31,11 @@ pub fn LCMP(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
 #[cfg(test)]
 mod tests {
     use instruction::comparison::lcmp::*;
+    use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
     use rtda::local_vars::LocalVars;
     use rtda::operand_stack::OperandStack;
     use util::code_reader::CodeReader;
-    use instruction::instruction::ExecuteResult;
 
     #[test]
     #[allow(non_snake_case)]

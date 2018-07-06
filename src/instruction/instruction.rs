@@ -22,7 +22,7 @@ pub struct ExecuteResult {
 pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
     let instruction = match opcode {
         0x00 => NOP,
-        0x02 => ICONST_M1, 
+        0x02 => ICONST_M1,
         0x03 => ICONST_0,
         0x04 => ICONST_1,
         0x05 => ICONST_2,
