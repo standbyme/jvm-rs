@@ -9,6 +9,7 @@ use instruction::constant::xipush::*;
 use instruction::control::goto::*;
 use instruction::load::iload::*;
 use instruction::math::add::*;
+use instruction::math::mul::*; 
 use instruction::math::inc::*;
 use instruction::store::istore::*;
 use rtda::frame::Frame;
@@ -42,6 +43,10 @@ pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteRes
         0x3C => ISTORE_1,
         0x3D => ISTORE_2,
         0x60 => IADD,
+        0x68 => IMUL,
+        0x69 => LMUL,
+        0x6A => FMUL,
+        0x6B => DMUL, 
         0x84 => IINC,
         0x94 => LCMP,
         0x95 => FCMPL,
