@@ -1,4 +1,5 @@
 use classfile::attribute_info::AttributeInfo;
+use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
 
@@ -22,5 +23,18 @@ impl ClassFile {
             .iter()
             .find(|x| x.name == "main" && x.descriptor == "([Ljava/lang/String;)V")
             .expect("Main method not found")
+    }
+
+    pub fn get_class_name(&self) -> &str {
+        self.constant_pool.get_class_name(self.this_class as usize)
+    }
+
+    pub fn get_super_class_name(&self) -> &str {
+        let super_class = self.super_class as usize;
+        if super_class > 0 {
+            self.constant_pool.get_class_name(super_class)
+        } else {
+            ""
+        }
     }
 }

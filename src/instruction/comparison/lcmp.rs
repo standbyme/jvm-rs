@@ -1,10 +1,9 @@
-
 use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
 use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
-pub fn LCMP(code_reader : CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn LCMP(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
     let Frame {
         operand_stack,
         local_vars,
@@ -32,6 +31,7 @@ pub fn LCMP(code_reader : CodeReader, frame: Frame) -> (ExecuteResult, CodeReade
 #[cfg(test)]
 mod tests {
     use instruction::comparison::lcmp::*;
+    use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
     use rtda::local_vars::LocalVars;
     use rtda::operand_stack::OperandStack;

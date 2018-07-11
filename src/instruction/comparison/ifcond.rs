@@ -2,90 +2,87 @@ use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
 use util::code_reader::CodeReader;
 
-#[allow(non_snake_case)]
-fn _icmpPop(frame: Frame) -> (i32, i32, Frame) {
+fn _ifcond(frame: Frame) -> (i32, Frame) {
     let Frame {
         operand_stack,
         local_vars,
     } = frame;
 
-    let (val2, operand_stack) = operand_stack.pop_int();
-    let (val1, operand_stack) = operand_stack.pop_int();
-
+    let (val, operand_stack) = operand_stack.pop_int();
     let frame = Frame {
         operand_stack,
         local_vars,
     };
-    (val1, val2, frame)
+    (val, frame)
 }
 
 #[allow(non_snake_case)]
-pub fn IF_ICMPGT(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPGT");
+pub fn IFEQ(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IFEQ");
     let (offset, code_reader) = code_reader.read_i16();
 
-    let (val1, val2, frame) = _icmpPop(frame);
-    let offset = if val1 > val2 { offset as isize } else { 0 };
+    let (val, frame) = _ifcond(frame);
+    let offset = if val == 0 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn IF_ICMPGE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPGE");
+pub fn IFNE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IFNE");
     let (offset, code_reader) = code_reader.read_i16();
 
-    let (val1, val2, frame) = _icmpPop(frame);
-    let offset = if val1 >= val2 { offset as isize } else { 0 };
+    let (val, frame) = _ifcond(frame);
+    let offset = if val != 0 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn IF_ICMPEQ(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPEQ");
+pub fn IFLT(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IFLT");
     let (offset, code_reader) = code_reader.read_i16();
 
-    let (val1, val2, frame) = _icmpPop(frame);
-    let offset = if val1 == val2 { offset as isize } else { 0 };
+    let (val, frame) = _ifcond(frame);
+    let offset = if val < 0 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn IF_ICMPNE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPNE");
+pub fn IFGE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IFGE");
     let (offset, code_reader) = code_reader.read_i16();
 
-    let (val1, val2, frame) = _icmpPop(frame);
-    let offset = if val1 != val2 { offset as isize } else { 0 };
+    let (val, frame) = _ifcond(frame);
+    let offset = if val >= 0 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn IF_ICMPLT(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPLT");
+pub fn IFGT(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IFGT");
     let (offset, code_reader) = code_reader.read_i16();
 
-    let (val1, val2, frame) = _icmpPop(frame);
-    let offset = if val1 < val2 { offset as isize } else { 0 };
+    let (val, frame) = _ifcond(frame);
+    let offset = if val > 0 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn IF_ICMPLE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPLE");
+pub fn IFLE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+    println!("IFLE");
     let (offset, code_reader) = code_reader.read_i16();
 
-    let (val1, val2, frame) = _icmpPop(frame);
-    let offset = if val1 <= val2 { offset as isize } else { 0 };
+    let (val, frame) = _ifcond(frame);
+    let offset = if val <= 0 { offset as isize } else { 0 };
 
     let execute_result = ExecuteResult { frame, offset };
     (execute_result, code_reader)
@@ -100,14 +97,13 @@ mod tests {
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPGT_success() {
-        let frame = Frame::new(2, 2);
+    fn test_IFEQ_success() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
-        let operand_stack = operand_stack.push_int(1);
         let operand_stack = operand_stack.push_int(0);
         let frame = Frame {
             operand_stack,
@@ -118,15 +114,14 @@ mod tests {
     }
 
     #[allow(non_snake_case)]
-    fn test_ICMPGT_fail() {
-        let frame = Frame::new(2, 2);
+    fn test_IFEQ_fail() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
-        let operand_stack = operand_stack.push_int(1);
-        let operand_stack = operand_stack.push_int(2);
+        let operand_stack = operand_stack.push_int(0);
         let frame = Frame {
             operand_stack,
             local_vars,
@@ -137,14 +132,13 @@ mod tests {
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPGE_success() {
-        let frame = Frame::new(2, 2);
+    fn test_IFNE_success() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
-        let operand_stack = operand_stack.push_int(1);
         let operand_stack = operand_stack.push_int(1);
         let frame = Frame {
             operand_stack,
@@ -155,15 +149,14 @@ mod tests {
     }
 
     #[allow(non_snake_case)]
-    fn test_ICMPGE_fail() {
-        let frame = Frame::new(2, 2);
+    fn test_IFNE_fail() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
         let operand_stack = operand_stack.push_int(0);
-        let operand_stack = operand_stack.push_int(2);
         let frame = Frame {
             operand_stack,
             local_vars,
@@ -174,14 +167,13 @@ mod tests {
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPEQ_success() {
-        let frame = Frame::new(2, 2);
+    fn test_IFLT_success() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
-        let operand_stack = operand_stack.push_int(-1);
         let operand_stack = operand_stack.push_int(-1);
         let frame = Frame {
             operand_stack,
@@ -192,15 +184,14 @@ mod tests {
     }
 
     #[allow(non_snake_case)]
-    fn test_ICMPEQ_fail() {
-        let frame = Frame::new(2, 2);
+    fn test_IFLT_fail() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
         let operand_stack = operand_stack.push_int(0);
-        let operand_stack = operand_stack.push_int(1);
         let frame = Frame {
             operand_stack,
             local_vars,
@@ -211,15 +202,14 @@ mod tests {
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPNE_success() {
-        let frame = Frame::new(2, 2);
+    fn test_IFGE_success() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
         let operand_stack = operand_stack.push_int(0);
-        let operand_stack = operand_stack.push_int(1);
         let frame = Frame {
             operand_stack,
             local_vars,
@@ -229,14 +219,13 @@ mod tests {
     }
 
     #[allow(non_snake_case)]
-    fn test_ICMPNE_fail() {
-        let frame = Frame::new(2, 2);
+    fn test_IFGE_fail() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
-        let operand_stack = operand_stack.push_int(-1);
         let operand_stack = operand_stack.push_int(-1);
         let frame = Frame {
             operand_stack,
@@ -248,15 +237,14 @@ mod tests {
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPLT_success() {
-        let frame = Frame::new(2, 2);
+    fn test_IFGT_success() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
         let operand_stack = operand_stack.push_int(1);
-        let operand_stack = operand_stack.push_int(2);
         let frame = Frame {
             operand_stack,
             local_vars,
@@ -266,14 +254,13 @@ mod tests {
     }
 
     #[allow(non_snake_case)]
-    fn test_ICMPLT_fail() {
-        let frame = Frame::new(2, 2);
+    fn test_IFGT_fail() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
-        let operand_stack = operand_stack.push_int(0);
         let operand_stack = operand_stack.push_int(0);
         let frame = Frame {
             operand_stack,
@@ -285,14 +272,13 @@ mod tests {
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPLE_success() {
-        let frame = Frame::new(2, 2);
+    fn test_IFLE_success() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
-        let operand_stack = operand_stack.push_int(0);
         let operand_stack = operand_stack.push_int(0);
         let frame = Frame {
             operand_stack,
@@ -303,15 +289,14 @@ mod tests {
     }
 
     #[allow(non_snake_case)]
-    fn test_ICMPLE_fail() {
-        let frame = Frame::new(2, 2);
+    fn test_IFLE_fail() {
+        let frame = Frame::new(1, 1);
         let Frame {
             operand_stack,
             local_vars,
         } = frame;
 
         let operand_stack = operand_stack.push_int(1);
-        let operand_stack = operand_stack.push_int(2);
         let frame = Frame {
             operand_stack,
             local_vars,
@@ -319,5 +304,4 @@ mod tests {
         let (ExecuteResult { frame: _, offset }, _) = IFLE(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 0);
     }
-
 }

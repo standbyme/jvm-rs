@@ -52,6 +52,7 @@ pub fn FCMPL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReade
 #[cfg(test)]
 mod tests {
     use instruction::comparison::fcmp::*;
+    use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
     use rtda::local_vars::LocalVars;
     use rtda::operand_stack::OperandStack;
