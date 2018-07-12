@@ -54,47 +54,47 @@ mod tests {
     use rtda::operand_stack::OperandStack;
     use util::code_reader::CodeReader;
 
-    trait Push {
-        fn go_on(self, operand_stack : OperandStack) -> OperandStack;
-    }
-
-    impl Push for i64 {
-        fn go_on(self, operand_stack : OperandStack) -> OperandStack {
-            operand_stack.push_long(self)
-        }
-    }
-
-    impl Push for i32 {
-        fn go_on(self, operand_stack : OperandStack) -> OperandStack {
-            operand_stack.push_int(self)
-        }
-    }
-
     #[test]
     #[allow(non_snake_case)]
     fn test_IAND() {
-        let frame = create_frame(3i32, 2i32);
+        let frame = Frame::new(1, 2);
+        let Frame {
+            operand_stack,
+            local_vars,
+        } = frame;
+
+        let operand_stack = operand_stack.push_int(350);
+        let operand_stack = operand_stack.push_int(678);
+
+        let frame = Frame {
+            operand_stack,
+            local_vars,
+        };
+
         let (ExecuteResult { frame, offset: _ }, _) = IAND(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_int();
-        assert_eq!(val, 2);
+        assert_eq!(val, 6);
     }
 
     #[test]
     #[allow(non_snake_case)]
     fn test_LAND() {
-        let frame = create_frame(3i64, 2i64);
+        let frame = Frame::new(1, 2);
+        let Frame {
+            operand_stack,
+            local_vars,
+        } = frame;
+
+        let operand_stack = operand_stack.push_long(12345678969);
+        let operand_stack = operand_stack.push_long(2997924580);
+
+        let frame = Frame {
+            operand_stack,
+            local_vars,
+        };
+
         let (ExecuteResult { frame, offset: _ }, _) = LAND(CodeReader::new(&vec![]), frame);
         let (val, _) = frame.operand_stack.pop_long();
-        assert_eq!(val, 2i64);
-    }
-
-    fn create_frame<T : Push>(op1: T, op2: T) -> Frame {
-        let operand_stack = OperandStack::new(10);
-        let operand_stack = op1.go_on(operand_stack);
-        let operand_stack = op2.go_on(operand_stack);
-        Frame {
-            local_vars: LocalVars::new(10),
-            operand_stack: operand_stack,
-        }
+        assert_eq!(val, 2458914912);
     }
 }
