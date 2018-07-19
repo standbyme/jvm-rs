@@ -93,14 +93,14 @@ pub fn IF_ICMPLE(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeR
 
 #[cfg(test)]
 mod tests {
-    use instruction::comparison::ifcond::*;
+    use instruction::comparison::if_icmp::*;
     use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
     use util::code_reader::CodeReader;
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPGT_success() {
+    fn test_IF_ICMPGT_success() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -113,12 +113,13 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFEQ(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPGT(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 257);
     }
 
+	#[test] 
     #[allow(non_snake_case)]
-    fn test_ICMPGT_fail() {
+    fn test_IF_ICMPGT_fail() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -131,13 +132,13 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFEQ(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPGT(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 0);
     }
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPGE_success() {
+    fn test_IF_ICMPGE_success() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -150,12 +151,13 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFNE(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPGE(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 257);
     }
 
+	#[test]
     #[allow(non_snake_case)]
-    fn test_ICMPGE_fail() {
+    fn test_IF_ICMPGE_fail() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -168,13 +170,13 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFNE(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPGE(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 0);
     }
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPEQ_success() {
+    fn test_IF_ICMPEQ_success() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -187,12 +189,13 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFLT(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPEQ(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 257);
     }
 
+	#[test]
     #[allow(non_snake_case)]
-    fn test_ICMPEQ_fail() {
+    fn test_IF_ICMPEQ_fail() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -205,13 +208,13 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFLT(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPEQ(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 0);
     }
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPNE_success() {
+    fn test_IF_ICMPNE_success() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -224,12 +227,13 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFGE(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPNE(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 257);
     }
 
+	#[test]
     #[allow(non_snake_case)]
-    fn test_ICMPNE_fail() {
+    fn test_IF_ICMPNE_fail() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -242,68 +246,13 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFGE(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPNE(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 0);
     }
 
     #[test]
     #[allow(non_snake_case)]
-    fn test_ICMPLT_success() {
-        let frame = Frame::new(2, 2);
-        let Frame {
-            operand_stack,
-            local_vars,
-        } = frame;
-
-        let operand_stack = operand_stack.push_int(1);
-        let operand_stack = operand_stack.push_int(2);
-        let frame = Frame {
-            operand_stack,
-            local_vars,
-        };
-        let (ExecuteResult { frame: _, offset }, _) = IFGT(CodeReader::new(&vec![1, 1]), frame);
-        assert_eq!(offset, 257);
-    }
-
-    #[allow(non_snake_case)]
-    fn test_ICMPLT_fail() {
-        let frame = Frame::new(2, 2);
-        let Frame {
-            operand_stack,
-            local_vars,
-        } = frame;
-
-        let operand_stack = operand_stack.push_int(0);
-        let operand_stack = operand_stack.push_int(0);
-        let frame = Frame {
-            operand_stack,
-            local_vars,
-        };
-        let (ExecuteResult { frame: _, offset }, _) = IFGT(CodeReader::new(&vec![1, 1]), frame);
-        assert_eq!(offset, 0);
-    }
-
-    #[test]
-    #[allow(non_snake_case)]
-    fn test_ICMPLE_success() {
-        let frame = Frame::new(2, 2);
-        let Frame {
-            operand_stack,
-            local_vars,
-        } = frame;
-
-        let operand_stack = operand_stack.push_int(0);
-        let operand_stack = operand_stack.push_int(0);
-        let frame = Frame {
-            operand_stack,
-            local_vars,
-        };
-        let (ExecuteResult { frame: _, offset }, _) = IFLE(CodeReader::new(&vec![1, 1]), frame);
-        assert_eq!(offset, 257);
-    }
-
-    #[allow(non_snake_case)]
-    fn test_ICMPLE_fail() {
+    fn test_IF_ICMPLT_success() {
         let frame = Frame::new(2, 2);
         let Frame {
             operand_stack,
@@ -316,7 +265,64 @@ mod tests {
             operand_stack,
             local_vars,
         };
-        let (ExecuteResult { frame: _, offset }, _) = IFLE(CodeReader::new(&vec![1, 1]), frame);
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPLT(CodeReader::new(&vec![1, 1]), frame);
+        assert_eq!(offset, 257);
+    }
+
+	#[test]
+    #[allow(non_snake_case)]
+    fn test_IF_ICMPLT_fail() {
+        let frame = Frame::new(2, 2);
+        let Frame {
+            operand_stack,
+            local_vars,
+        } = frame;
+
+        let operand_stack = operand_stack.push_int(0);
+        let operand_stack = operand_stack.push_int(0);
+        let frame = Frame {
+            operand_stack,
+            local_vars,
+        };
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPLT(CodeReader::new(&vec![1, 1]), frame);
+        assert_eq!(offset, 0);
+    }
+
+    #[test]
+    #[allow(non_snake_case)]
+    fn test_IF_ICMPLE_success() {
+        let frame = Frame::new(2, 2);
+        let Frame {
+            operand_stack,
+            local_vars,
+        } = frame;
+
+        let operand_stack = operand_stack.push_int(0);
+        let operand_stack = operand_stack.push_int(0);
+        let frame = Frame {
+            operand_stack,
+            local_vars,
+        };
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPLE(CodeReader::new(&vec![1, 1]), frame);
+        assert_eq!(offset, 257);
+    }
+
+	#[test]
+    #[allow(non_snake_case)]
+    fn test_IF_ICMPLE_fail() {
+        let frame = Frame::new(2, 2);
+        let Frame {
+            operand_stack,
+            local_vars,
+        } = frame;
+
+        let operand_stack = operand_stack.push_int(2);
+        let operand_stack = operand_stack.push_int(1);
+        let frame = Frame {
+            operand_stack,
+            local_vars,
+        };
+        let (ExecuteResult { frame: _, offset }, _) = IF_ICMPLE(CodeReader::new(&vec![1, 1]), frame);
         assert_eq!(offset, 0);
     }
 
