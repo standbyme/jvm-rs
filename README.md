@@ -2,6 +2,7 @@
 [![Linux Build Status](https://img.shields.io/travis/standbyme/jvm-rs/master.svg?label=Linux%20build&style=flat-square)](https://travis-ci.org/standbyme/jvm-rs)
 [![Codecov](https://img.shields.io/codecov/c/github/standbyme/jvm-rs.svg?style=flat-square)](https://codecov.io/gh/standbyme/jvm-rs)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/standbyme/jvm-rs/) 
+[![](https://img.shields.io/gitter/room/jvm-rs/main.js.svg)](https://gitter.im/jvm-rs/main)
 
 A JVM on Rust under development.
 
