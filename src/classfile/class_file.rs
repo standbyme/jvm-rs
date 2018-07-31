@@ -18,18 +18,18 @@ pub struct ClassFile {
 }
 
 impl ClassFile {
-    pub fn get_main_method<'a>(&'a self) -> &'a MemberInfo {
+    pub fn main_method<'a>(&'a self) -> &'a MemberInfo {
         self.methods
             .iter()
             .find(|x| x.name == "main" && x.descriptor == "([Ljava/lang/String;)V")
             .expect("Main method not found")
     }
 
-    pub fn get_class_name(&self) -> &str {
+    pub fn class_name(&self) -> &str {
         self.constant_pool.get_class_name(self.this_class as usize)
     }
 
-    pub fn get_super_class_name(&self) -> &str {
+    pub fn super_class_name(&self) -> &str {
         let super_class = self.super_class as usize;
         if super_class > 0 {
             self.constant_pool.get_class_name(super_class)

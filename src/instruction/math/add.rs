@@ -92,8 +92,8 @@ pub fn FADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
 
 #[cfg(test)]
 mod tests {
-    use instruction::math::add::*;
     use instruction::instruction::ExecuteResult;
+    use instruction::math::add::*;
     use rtda::frame::Frame;
     use rtda::local_vars::LocalVars;
     use rtda::operand_stack::OperandStack;

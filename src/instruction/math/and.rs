@@ -4,7 +4,6 @@ use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
 pub fn IAND(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-
     let Frame {
         operand_stack,
         local_vars,
@@ -25,7 +24,6 @@ pub fn IAND(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
 
 #[allow(non_snake_case)]
 pub fn LAND(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-
     let Frame {
         operand_stack,
         local_vars,

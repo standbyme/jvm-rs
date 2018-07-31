@@ -11,19 +11,10 @@ pub struct MemberInfo {
 }
 
 impl MemberInfo {
-    pub fn get_code_attribute(&self) -> &AttributeInfo {
-        self.attributes
-            .iter()
-            .find(|x| match x {
-                AttributeInfo::Code {
-                    max_stack: _,
-                    max_locals: _,
-                    code: _,
-                    exception_table: _,
-                    attributes: _,
-                } => true,
-                _ => false,
-            })
-            .expect("Code attribute not found")
+    pub fn code_attribute(&self) -> Option<&AttributeInfo> {
+        self.attributes.iter().find(|x| match x {
+            AttributeInfo::Code { .. } => true,
+            _ => false,
+        })
     }
 }
