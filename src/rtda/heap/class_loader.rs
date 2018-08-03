@@ -1,14 +1,16 @@
 use classfile::class_file::ClassFile;
 use classfile::class_reader::ClassReader;
-use classfile::member_info::MemberInfo;
+use classfile::constant_info::ConstantInfo;
+use classfile::constant_pool::ConstantPool;
+
 use classpath::classpath::ClassPath;
 use rtda::heap::class::Class;
 use rtda::heap::field::Field;
 use rtda::heap::method::Method;
-use rtda::slot::Slot;
+
+use rtda::vars::Vars;
 use std::collections::HashMap;
 use std::rc::Rc;
-use vec_map::VecMap;
 
 pub struct ClassLoader {
     class_path: ClassPath,
@@ -16,9 +18,10 @@ pub struct ClassLoader {
 }
 
 struct Acc {
+    constant_pool: ConstantPool,
     next_instance_field_slot_id: usize,
     next_static_field_slot_id: usize,
-    static_vars: VecMap<Slot>,
+    static_vars: Vars,
 }
 
 impl ClassLoader {
@@ -57,6 +60,7 @@ impl ClassLoader {
             access_flags,
             methods,
             fields,
+            constant_pool,
             ..
         } = class_file;
 
@@ -68,13 +72,89 @@ impl ClassLoader {
         } else {
             (None, class_loader)
         };
+
+        fn fold_func(acc: Acc, field: &Field) -> Acc {
+            let Acc {
+                next_instance_field_slot_id: instance_field_slot_id,
+                next_static_field_slot_id: static_field_slot_id,
+                mut static_vars,
+                constant_pool,
+            } = acc;
+            let slot_id_delta: usize = if field.is_long_or_double() { 2 } else { 1 };
+            let (next_instance_field_slot_id, next_static_field_slot_id, static_vars) =
+                if field.is_static() {
+                    let static_vars: Vars = if field.is_final() {
+                        let constant_value_index = field.constant_value_index;
+                        if constant_value_index > 0 {
+                            match field.class_member.descriptor.as_str() {
+                                // todo: Complete  Z B C S I J D Ljava/lang/String
+                                "F" => {
+                                    let val = match constant_pool.get(constant_value_index) {
+                                        ConstantInfo::Integer(val) => *val,
+                                        _ => panic!("Not Integer"),
+                                    };
+                                    static_vars.set_int(static_field_slot_id, val)
+                                }
+                                _ => panic!("TODO"),
+                            }
+                        } else {
+                            panic!("constant_value_index < 0");
+                        }
+                    } else {
+                        static_vars
+                    };
+                    (
+                        instance_field_slot_id,
+                        static_field_slot_id + slot_id_delta,
+                        static_vars,
+                    )
+                } else {
+                    (
+                        instance_field_slot_id + slot_id_delta,
+                        static_field_slot_id,
+                        static_vars,
+                    )
+                };
+
+            Acc {
+                next_instance_field_slot_id,
+                next_static_field_slot_id,
+                static_vars,
+                constant_pool,
+            }
+        }
+        let next_static_field_slot_id: usize = 0;
+        let next_instance_field_slot_id: usize = super_class
+            .clone()
+            .map(|x| x.instance_slot_count)
+            .unwrap_or(0);
+        let static_vars = Vars::new(10);
+
         let fields: Vec<Field> = fields.into_iter().map(|x| Field::new(x)).collect();
+        let Acc {
+            next_instance_field_slot_id: instance_slot_count,
+            next_static_field_slot_id: static_slot_count,
+            static_vars,
+            constant_pool,
+        } = fields.iter().fold(
+            Acc {
+                next_instance_field_slot_id,
+                next_static_field_slot_id,
+                constant_pool,
+                static_vars,
+            },
+            fold_func,
+        );
         let class = Rc::new(Class {
             access_flags,
             fields,
             name,
             super_class,
             methods,
+            instance_slot_count,
+            static_slot_count,
+            static_vars,
+            constant_pool,
         });
 
         (class, class_loader)

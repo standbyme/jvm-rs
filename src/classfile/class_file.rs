@@ -1,5 +1,4 @@
 use classfile::attribute_info::AttributeInfo;
-use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
 

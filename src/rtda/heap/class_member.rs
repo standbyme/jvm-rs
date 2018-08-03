@@ -24,4 +24,8 @@ impl ClassMember {
     pub fn is_static(&self) -> bool {
         self.access_flags & ACC_STATIC != 0
     }
+
+    pub fn is_final(&self) -> bool {
+        self.access_flags & ACC_FINAL != 0
+    }
 }

@@ -1,5 +1,4 @@
 use classfile::constant_info::ConstantInfo;
-use std::ops::Index;
 use vec_map::VecMap;
 
 #[derive(Debug)]

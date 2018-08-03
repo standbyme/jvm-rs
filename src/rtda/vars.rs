@@ -5,21 +5,21 @@ use self::vec_map::VecMap;
 use rtda::slot::Slot;
 
 #[derive(Debug)]
-pub struct LocalVars {
+pub struct Vars {
     vec_map: VecMap<Slot>,
 }
 
-impl LocalVars {
-    pub fn new(max_locals: usize) -> LocalVars {
+impl Vars {
+    pub fn new(max_locals: usize) -> Vars {
         if max_locals > 0 {
             let vec_map = VecMap::with_capacity(max_locals);
-            LocalVars { vec_map }
+            Vars { vec_map }
         } else {
             panic!("max_locals < 0")
         }
     }
 
-    pub fn set_int(mut self, index: usize, val: i32) -> LocalVars {
+    pub fn set_int(mut self, index: usize, val: i32) -> Vars {
         self.vec_map.insert(index, Slot::Num(val));
         self
     }

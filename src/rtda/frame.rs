@@ -1,15 +1,15 @@
-use rtda::local_vars::LocalVars;
 use rtda::operand_stack::OperandStack;
+use rtda::vars::Vars;
 
 #[derive(Debug)]
 pub struct Frame {
-    pub local_vars: LocalVars,
+    pub local_vars: Vars,
     pub operand_stack: OperandStack,
 }
 
 impl Frame {
     pub fn new(max_locals: usize, max_stack: usize) -> Frame {
-        let local_vars = LocalVars::new(max_locals);
+        let local_vars = Vars::new(max_locals);
         let operand_stack = OperandStack::new(max_stack);
         Frame {
             local_vars,
@@ -21,8 +21,8 @@ impl Frame {
 #[cfg(test)]
 mod tests {
     use rtda::frame::Frame;
-    use rtda::local_vars::LocalVars;
     use rtda::operand_stack::OperandStack;
+    use rtda::vars::Vars;
 
     #[test]
     fn frame() {
@@ -31,7 +31,7 @@ mod tests {
         operand_stack(frame.operand_stack);
     }
 
-    fn local_vars(local_vars: LocalVars) {
+    fn local_vars(local_vars: Vars) {
         let local_vars = local_vars.set_int(0, 100);
         let local_vars = local_vars.set_int(1, -100);
         assert_eq!(local_vars.get_int(0), 100);

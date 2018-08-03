@@ -31,7 +31,7 @@ pub enum AttributeInfo {
         attributes: Vec<AttributeInfo>,
     },
     ConstantValue {
-        constantvalue_index: u16,
+        constant_value_index: u16,
     },
     Deprecated,
     Exceptions {

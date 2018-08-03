@@ -1,10 +1,7 @@
-use classfile::class_file::ClassFile;
 use classfile::constant_pool::ConstantPool;
-use classfile::member_info::MemberInfo;
-use rtda::heap::class_loader::ClassLoader;
-
 use rtda::heap::field::Field;
 use rtda::heap::method::Method;
+use rtda::vars::Vars;
 use std::rc::Rc;
 
 pub struct Class {
@@ -12,15 +9,15 @@ pub struct Class {
     pub name: String,
     //    pub super_class_name: String,
     //    interface_names: Vec<String>,
-    //    constant_pool: ConstantPool,
+    pub constant_pool: ConstantPool,
     pub fields: Vec<Field>,
     pub methods: Vec<Method>,
     //    loader * ClassLoader
     pub super_class: Option<Rc<Class>>,
     //    interfaces        [] * Class
-    //    instanceSlotCount uint
-    //    staticSlotCount   uint
-    //    staticVars        Slots,
+    pub instance_slot_count: usize,
+    pub static_slot_count: usize,
+    pub static_vars: Vars,
 }
 
 impl Class {

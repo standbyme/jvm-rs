@@ -17,4 +17,11 @@ impl MemberInfo {
             _ => false,
         })
     }
+
+    pub fn constant_value_attribute(&self) -> Option<&AttributeInfo> {
+        self.attributes.iter().find(|x| match x {
+            AttributeInfo::ConstantValue { .. } => true,
+            _ => false,
+        })
+    }
 }

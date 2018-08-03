@@ -385,13 +385,13 @@ impl ClassReader for [u8] {
                 )
             }
             "ConstantValue" => {
-                let (constantvalue_index, after_constantvalue_index) =
+                let (constant_value_index, after_constant_value_index) =
                     after_attribute_length.read_u16();
                 (
                     AttributeInfo::ConstantValue {
-                        constantvalue_index,
+                        constant_value_index,
                     },
-                    after_constantvalue_index,
+                    after_constant_value_index,
                 )
             }
             "Deprecated" => (AttributeInfo::Deprecated, after_attribute_length),
