@@ -95,8 +95,6 @@ mod tests {
     use instruction::instruction::ExecuteResult;
     use instruction::math::add::*;
     use rtda::frame::Frame;
-    use rtda::local_vars::LocalVars;
-    use rtda::operand_stack::OperandStack;
     use util::code_reader::CodeReader;
 
     #[test]

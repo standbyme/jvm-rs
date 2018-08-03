@@ -10,9 +10,9 @@ use instruction::control::goto::*;
 use instruction::load::iload::*;
 use instruction::math::add::*;
 use instruction::math::and::*;
+use instruction::math::inc::*;
 use instruction::math::mul::*;
 use instruction::math::neg::*;
-use instruction::math::inc::*;
 use instruction::store::istore::*;
 use rtda::frame::Frame;
 use util::code_reader::CodeReader;
@@ -48,13 +48,13 @@ pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteRes
         0x68 => IMUL,
         0x69 => LMUL,
         0x6A => FMUL,
-        0x6B => DMUL, 
+        0x6B => DMUL,
         0x74 => INEG,
         0x75 => LNEG,
         0x76 => FNEG,
         0x77 => DNEG,
         0x7E => IAND,
-        0x7F => LAND, 
+        0x7F => LAND,
         0x84 => IINC,
         0x94 => LCMP,
         0x95 => FCMPL,

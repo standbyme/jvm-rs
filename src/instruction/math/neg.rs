@@ -13,7 +13,7 @@ pub fn DNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let operand_stack = operand_stack.push_double(-v);
     let frame = Frame {
         operand_stack,
-        local_vars
+        local_vars,
     };
 
     let execute_result = ExecuteResult { frame, offset: 0 };
@@ -31,7 +31,7 @@ pub fn FNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let operand_stack = operand_stack.push_float(-v);
     let frame = Frame {
         operand_stack,
-        local_vars
+        local_vars,
     };
 
     let execute_result = ExecuteResult { frame, offset: 0 };
@@ -49,7 +49,7 @@ pub fn INEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let operand_stack = operand_stack.push_int(-v);
     let frame = Frame {
         operand_stack,
-        local_vars
+        local_vars,
     };
 
     let execute_result = ExecuteResult { frame, offset: 0 };
@@ -67,7 +67,7 @@ pub fn LNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let operand_stack = operand_stack.push_long(-v);
     let frame = Frame {
         operand_stack,
-        local_vars
+        local_vars,
     };
 
     let execute_result = ExecuteResult { frame, offset: 0 };
@@ -76,13 +76,12 @@ pub fn LNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
 
 #[cfg(test)]
 mod tests {
-    use instruction::math::neg::*;
     use instruction::instruction::ExecuteResult;
+    use instruction::math::neg::*;
     use rtda::frame::Frame;
-    use rtda::local_vars::LocalVars;
-    use rtda::operand_stack::OperandStack;
-    use std::f64;
+    use rtda::vars::Vars;
     use std::f32;
+    use std::f64;
     use util::code_reader::CodeReader;
 
     #[test]

@@ -54,8 +54,8 @@ mod tests {
     use instruction::comparison::fcmp::*;
     use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
-    use rtda::local_vars::LocalVars;
     use rtda::operand_stack::OperandStack;
+    use rtda::vars::Vars;
     use util::code_reader::CodeReader;
 
     #[test]
@@ -90,7 +90,7 @@ mod tests {
         let operand_stack = operand_stack.push_float(op1);
         let operand_stack = operand_stack.push_float(op2);
         Frame {
-            local_vars: LocalVars::new(10),
+            local_vars: Vars::new(10),
             operand_stack: operand_stack,
         }
     }

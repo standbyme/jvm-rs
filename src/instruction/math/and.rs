@@ -44,12 +44,9 @@ pub fn LAND(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
 
 #[cfg(test)]
 mod tests {
-    use instruction::math::and::*;
-
     use instruction::instruction::ExecuteResult;
+    use instruction::math::and::*;
     use rtda::frame::Frame;
-    use rtda::local_vars::LocalVars;
-    use rtda::operand_stack::OperandStack;
     use util::code_reader::CodeReader;
 
     #[test]
