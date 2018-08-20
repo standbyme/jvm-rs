@@ -38,8 +38,10 @@ impl CodeReader {
 
     pub fn read_u16(self) -> (u16, CodeReader) {
         let CodeReader { pc, code } = self;
-        let seq = &code[pc..(pc + 1)];
-        let val = BigEndian::read_u16(&seq);
+        let val = {
+            let seq = &code[pc..(pc + 1)];
+            BigEndian::read_u16(&seq)
+        };
         let pc = pc + 2;
         let code_reader = CodeReader { pc, code };
         (val, code_reader)
@@ -47,8 +49,11 @@ impl CodeReader {
 
     pub fn read_i16(self) -> (i16, CodeReader) {
         let CodeReader { pc, code } = self;
-        let seq = &code[pc..(pc + 2)];
-        let val = BigEndian::read_i16(&seq);
+
+        let val = {
+            let seq = &code[pc..(pc + 2)];
+            BigEndian::read_i16(&seq)
+        };
         let pc = pc + 2;
         let code_reader = CodeReader { pc, code };
         (val, code_reader)

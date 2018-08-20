@@ -15,14 +15,20 @@ use instruction::math::mul::*;
 use instruction::math::neg::*;
 use instruction::store::istore::*;
 use rtda::frame::Frame;
+use rtda::thread::Thread;
 use util::code_reader::CodeReader;
 
 pub struct ExecuteResult {
-    pub frame: Frame,
+    pub thread: Thread,
     pub offset: isize,
 }
 
-pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn execute(pc: usize, thread: Thread) -> (ExecuteResult, CodeReader) {
+    let (frame, thread) = thread.pop_frame();
+    let code = frame.method.clone().code.clone();
+    let code_reader = CodeReader::new(code).set_pc(pc);
+    let (opcode, after_opcode) = code_reader.read_u8();
+
     let instruction = match opcode {
         0x00 => NOP,
         0x02 => ICONST_M1,
@@ -80,5 +86,6 @@ pub fn execute(opcode: u8, code_reader: CodeReader, frame: Frame) -> (ExecuteRes
         }
     };
 
-    instruction(code_reader, frame)
+    let thread = thread.push_frame(frame);
+    instruction(after_opcode, thread)
 }

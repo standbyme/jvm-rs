@@ -11,8 +11,8 @@ use classfile::class_file::ClassFile;
 use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
-use util::modified_utf8::from_modified_utf8;
 use std::rc::Rc;
+use util::modified_utf8::from_modified_utf8;
 
 const CONSTANT_UTF8: u8 = 1;
 const CONSTANT_INTEGER: u8 = 3;

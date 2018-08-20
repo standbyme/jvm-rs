@@ -1,9 +1,9 @@
 use instruction::instruction::ExecuteResult;
-use rtda::frame::Frame;
+use rtda::thread::Thread;
 use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
-pub fn NOP(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
-    let execute_result = ExecuteResult { frame, offset: 0 };
+pub fn NOP(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }

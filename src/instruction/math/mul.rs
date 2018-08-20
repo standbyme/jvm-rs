@@ -1,14 +1,18 @@
 use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
+use rtda::thread::Thread;
 use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
-pub fn DMUL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn DMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("DMUL");
+
+    let (frame, thread) = thread.pop_frame();
 
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_double();
@@ -19,18 +23,22 @@ pub fn DMUL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn FMUL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn FMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("FMUL");
+    let (frame, thread) = thread.pop_frame();
 
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_float();
@@ -41,18 +49,22 @@ pub fn FMUL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn IMUL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn IMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("IMUL");
+    let (frame, thread) = thread.pop_frame();
 
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_int();
@@ -63,18 +75,22 @@ pub fn IMUL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn LMUL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn LMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("LMUL");
+    let (frame, thread) = thread.pop_frame();
 
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_long();
@@ -85,8 +101,10 @@ pub fn LMUL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
@@ -95,15 +113,28 @@ mod test {
     use instruction::instruction::ExecuteResult;
     use instruction::math::mul::*;
     use rtda::frame::Frame;
+    use rtda::thread::Thread;
+    use std::rc::Rc;
     use util::code_reader::CodeReader;
+    use rtda::heap::method::Method;
+    use classfile::member_info::MemberInfo;
 
     #[test]
     #[allow(non_snake_case)]
     fn test_DMUL() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method
         } = frame;
 
         let operand_stack = operand_stack.push_double(2.71828182845f64);
@@ -112,9 +143,12 @@ mod test {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = DMUL(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DMUL(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_double();
         assert_eq!(val, 8.53973422264514888498427947f64);
     }
@@ -122,10 +156,19 @@ mod test {
     #[test]
     #[allow(non_snake_case)]
     fn test_FMUL() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method
         } = frame;
 
         let operand_stack = operand_stack.push_float(2.71828182845f32);
@@ -134,9 +177,12 @@ mod test {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = FMUL(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            FMUL(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_float();
         assert_eq!(val, 8.53973422264514888498427947f32);
     }
@@ -144,10 +190,19 @@ mod test {
     #[test]
     #[allow(non_snake_case)]
     fn test_IMUL() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method
         } = frame;
 
         let operand_stack = operand_stack.push_int(2);
@@ -156,9 +211,12 @@ mod test {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = IMUL(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            IMUL(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 6);
     }
@@ -166,10 +224,19 @@ mod test {
     #[test]
     #[allow(non_snake_case)]
     fn test_LMUL() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method
         } = frame;
 
         let operand_stack = operand_stack.push_long(1234567890);
@@ -178,9 +245,12 @@ mod test {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = LMUL(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            LMUL(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_long();
         assert_eq!(val, 3701141423109736200);
     }

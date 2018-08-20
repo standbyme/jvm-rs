@@ -64,7 +64,10 @@ impl ClassLoader {
             ..
         } = class_file;
 
-        let methods: Vec<Method> = methods.into_iter().map(|x| Method::new(x)).collect();
+        let methods: Vec<Rc<Method>> = methods
+            .into_iter()
+            .map(|x| Rc::new(Method::new(x)))
+            .collect();
 
         let (super_class, class_loader) = if name != "java/lang/Object" {
             let (class, class_loader) = class_loader.load(super_class_name);

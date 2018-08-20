@@ -1,14 +1,17 @@
 use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
+use rtda::thread::Thread;
 use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
-pub fn IADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn IADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("IADD");
+    let (frame, thread) = thread.pop_frame();
 
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_int();
@@ -19,18 +22,22 @@ pub fn IADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn DADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn DADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("DADD");
+    let (frame, thread) = thread.pop_frame();
 
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_double();
@@ -41,18 +48,22 @@ pub fn DADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn LADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn LADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("LADD");
+    let (frame, thread) = thread.pop_frame();
 
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_long();
@@ -63,18 +74,22 @@ pub fn LADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn FADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn FADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("FADD");
+    let (frame, thread) = thread.pop_frame();
 
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_float();
@@ -85,25 +100,40 @@ pub fn FADD(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[cfg(test)]
 mod tests {
+    use classfile::member_info::MemberInfo;
     use instruction::instruction::ExecuteResult;
     use instruction::math::add::*;
     use rtda::frame::Frame;
+    use rtda::heap::method::Method;
+    use rtda::thread::Thread;
+    use std::rc::Rc;
     use util::code_reader::CodeReader;
 
     #[test]
     #[allow(non_snake_case)]
     fn test_IADD() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_int(2);
@@ -112,9 +142,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = IADD(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            IADD(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 5);
     }
@@ -122,10 +155,19 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_DADD() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_double(2.71828182845f64);
@@ -134,9 +176,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = DADD(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DADD(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_double();
         assert_eq!(val, 5.8598744820397926);
     }
@@ -144,10 +189,19 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_FADD() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_float(3.1415926);
@@ -156,9 +210,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = FADD(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            FADD(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_float();
         assert_eq!(val, 6.2831852);
     }
@@ -166,10 +223,19 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_LADD() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_long(12345678969);
@@ -178,9 +244,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = DADD(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DADD(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_long();
         assert_eq!(val, 15343603549);
     }

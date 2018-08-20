@@ -1,5 +1,6 @@
 use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
+use rtda::thread::Thread;
 use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
@@ -7,6 +8,7 @@ fn _dcmp(frame: Frame, flag: bool) -> (f64, f64, Frame) {
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (val2, operand_stack) = operand_stack.pop_double();
@@ -27,42 +29,54 @@ fn _dcmp(frame: Frame, flag: bool) -> (f64, f64, Frame) {
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
     (val1, val2, frame)
 }
 
 #[allow(non_snake_case)]
-pub fn DCMPG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn DCMPG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("DCMPG");
 
+    let (frame, thread) = thread.pop_frame();
     let (_, _, frame) = _dcmp(frame, true);
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn DCMPL(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn DCMPL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
     println!("DCMPG");
 
+    let (frame, thread) = thread.pop_frame();
     let (_, _, frame) = _dcmp(frame, false);
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[cfg(test)]
 mod tests {
+    use classfile::member_info::MemberInfo;
     use instruction::comparison::dcmp::*;
     use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
+    use rtda::heap::method::Method;
     use rtda::operand_stack::OperandStack;
+    use rtda::thread::Thread;
     use rtda::vars::Vars;
+    use std::rc::Rc;
     use util::code_reader::CodeReader;
 
     #[test]
     #[allow(non_snake_case)]
     fn test_DCMPL() {
         let frame = create_frame(1.48, 1.49);
-        let (ExecuteResult { frame, offset: _ }, _) = DCMPL(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DCMPL(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, -1);
     }
@@ -71,7 +85,10 @@ mod tests {
     #[allow(non_snake_case)]
     fn test_DCMPG() {
         let frame = create_frame(1.49, 1.48);
-        let (ExecuteResult { frame, offset: _ }, _) = DCMPG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DCMPG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 1);
     }
@@ -80,7 +97,10 @@ mod tests {
     #[allow(non_snake_case)]
     fn test_DCMPG_equal() {
         let frame = create_frame(1.49, 1.49);
-        let (ExecuteResult { frame, offset: _ }, _) = DCMPG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DCMPG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, 0);
     }
@@ -89,10 +109,18 @@ mod tests {
         let operand_stack = OperandStack::new(10);
         let operand_stack = operand_stack.push_double(op1);
         let operand_stack = operand_stack.push_double(op2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
         Frame {
             local_vars: Vars::new(10),
             operand_stack: operand_stack,
+            method,
         }
     }
-
 }

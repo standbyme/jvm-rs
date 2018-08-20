@@ -1,6 +1,7 @@
 use classfile::member_info::MemberInfo;
 use rtda::heap::access_flags::*;
 
+#[derive(Debug)]
 pub struct ClassMember {
     pub access_flags: u16,
     pub name: String,

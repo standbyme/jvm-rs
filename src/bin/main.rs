@@ -8,7 +8,7 @@ use jvm::rtda::heap::class_loader::ClassLoader;
 use jvm::rtda::heap::method::Method;
 use jvm::rtda::thread::Thread;
 use jvm::shell::command::Command;
-use jvm::util::code_reader::CodeReader;
+use std::rc::Rc;
 
 fn main() {
     let class_name = "src.test_data.GaussTest";
@@ -30,46 +30,31 @@ fn start_jvm(command: Command) {
     interpret(main_method)
 }
 
-fn interpret(method: &Method) {
-    let Method {
-        max_stack,
-        max_locals,
-        code,
-        ..
-    } = method;
-
+fn interpret(method: Rc<Method>) {
     let thread = Thread::new();
-    let frame = Frame::new(*max_locals as usize, *max_stack as usize);
+    let frame = Frame::new(method);
     let thread = thread.push_frame(frame);
-    execute(thread, &code);
+    execute(thread);
 }
 
-fn execute(thread: Thread, code: &Vec<u8>) {
-    let (frame, _) = thread.pop_frame();
-    let mut mut_code_reader = CodeReader::new(code);
-    let mut mut_frame = frame;
+fn execute(thread: Thread) {
     let mut mut_pc = 0usize;
-    loop {
-        let code_reader = mut_code_reader;
-        let frame = mut_frame;
+    let mut mut_thread = thread;
+    while !mut_thread.is_stack_empty() {
+        let thread = mut_thread;
         let pc = mut_pc;
 
-        let next_code_reader = code_reader.set_pc(pc);
-        let (opcode, after_opcode) = next_code_reader.read_u8();
-
-        let (execute_result, after_execute) = instruction::execute(opcode, after_opcode, frame);
-        let ExecuteResult { frame, offset } = execute_result;
+        let (execute_result, after_execute) = instruction::execute(mut_pc, thread);
+        let ExecuteResult { thread, offset } = execute_result;
 
         mut_pc = match offset {
             0 => after_execute.pc,
             i => (pc as isize + i) as usize,
         };
+        mut_thread = thread;
 
         println!("pc: {}", pc);
         println!("offset: {}", offset);
         println!("mut_pc: {}", mut_pc);
-        println!();
-        mut_frame = frame;
-        mut_code_reader = after_execute;
     }
 }

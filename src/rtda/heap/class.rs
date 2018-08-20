@@ -11,7 +11,7 @@ pub struct Class {
     //    interface_names: Vec<String>,
     pub constant_pool: ConstantPool,
     pub fields: Vec<Field>,
-    pub methods: Vec<Method>,
+    pub methods: Vec<Rc<Method>>,
     //    loader * ClassLoader
     pub super_class: Option<Rc<Class>>,
     //    interfaces        [] * Class
@@ -21,19 +21,20 @@ pub struct Class {
 }
 
 impl Class {
-    pub fn main_method(&self) -> &Method {
+    pub fn main_method(&self) -> Rc<Method> {
         self.get_method("main", "([Ljava/lang/String;)V", true)
     }
-    fn get_method(&self, name: &str, descriptor: &str, is_static: bool) -> &Method {
+    fn get_method(&self, name: &str, descriptor: &str, is_static: bool) -> Rc<Method> {
         println!(
             "name {} descriptor {} is_static {}",
             name, descriptor, is_static
         );
-        self.methods
+        let reference = self.methods
             .iter()
             .find(|x| {
                 x.is_static() == is_static && x.name() == name && x.descriptor() == descriptor
             })
-            .expect("Method not found")
+            .expect("Method not found");
+        Rc::clone(reference)
     }
 }

@@ -3,6 +3,7 @@ use classfile::member_info::MemberInfo;
 use rtda::heap::class_member::ClassMember;
 use std::rc::Rc;
 
+#[derive(Debug)]
 pub struct Method {
     class_member: ClassMember,
     pub max_locals: usize,
@@ -29,7 +30,7 @@ impl Method {
             None => Method {
                 class_member,
                 max_stack: 0,
-                max_locals: 0,
+                max_locals: 1,
                 code: Rc::new(Vec::new()),
             },
             _ => panic!(),

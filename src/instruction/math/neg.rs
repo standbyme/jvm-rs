@@ -1,12 +1,16 @@
 use instruction::instruction::ExecuteResult;
 use rtda::frame::Frame;
+use rtda::thread::Thread;
 use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
-pub fn DNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn DNEG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
+    let (frame, thread) = thread.pop_frame();
+
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v, operand_stack) = operand_stack.pop_double();
@@ -14,17 +18,21 @@ pub fn DNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn FNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn FNEG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
+    let (frame, thread) = thread.pop_frame();
+
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v, operand_stack) = operand_stack.pop_float();
@@ -32,17 +40,21 @@ pub fn FNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn INEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn INEG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
+    let (frame, thread) = thread.pop_frame();
+
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v, operand_stack) = operand_stack.pop_int();
@@ -50,17 +62,21 @@ pub fn INEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
 #[allow(non_snake_case)]
-pub fn LNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader) {
+pub fn LNEG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
+    let (frame, thread) = thread.pop_frame();
+
     let Frame {
         operand_stack,
         local_vars,
+        method,
     } = frame;
 
     let (v, operand_stack) = operand_stack.pop_long();
@@ -68,9 +84,10 @@ pub fn LNEG(code_reader: CodeReader, frame: Frame) -> (ExecuteResult, CodeReader
     let frame = Frame {
         operand_stack,
         local_vars,
+        method,
     };
-
-    let execute_result = ExecuteResult { frame, offset: 0 };
+    let thread = thread.push_frame(frame);
+    let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }
 
@@ -79,18 +96,31 @@ mod tests {
     use instruction::instruction::ExecuteResult;
     use instruction::math::neg::*;
     use rtda::frame::Frame;
+    use rtda::thread::Thread;
     use rtda::vars::Vars;
     use std::f32;
     use std::f64;
+    use std::rc::Rc;
     use util::code_reader::CodeReader;
+    use rtda::heap::method::Method;
+    use classfile::member_info::MemberInfo;
 
     #[test]
     #[allow(non_snake_case)]
     fn test_DNEG() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_double(2f64);
@@ -98,9 +128,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = DNEG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DNEG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_double();
         assert_eq!(val, -2f64);
     }
@@ -108,10 +141,19 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_DNEG_zero() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_double(-0f64);
@@ -119,9 +161,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = DNEG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DNEG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_double();
         assert_eq!(val, 0f64);
     }
@@ -129,10 +174,19 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_DNEG_inf() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_double(f64::INFINITY);
@@ -140,9 +194,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = DNEG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            DNEG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_double();
         assert_eq!(val, f64::NEG_INFINITY);
     }
@@ -150,10 +207,19 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_FNEG() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_float(-100.7678f32);
@@ -161,9 +227,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = FNEG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            FNEG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_float();
         assert_eq!(val, 100.7678f32);
     }
@@ -171,10 +240,19 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_FNEG_max_min() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_float(f32::MAX);
@@ -182,19 +260,31 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = FNEG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            FNEG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_float();
         assert_eq!(val, f32::MIN);
     }
     #[test]
     #[allow(non_snake_case)]
     fn test_INEG() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_int(234556);
@@ -202,9 +292,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = INEG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            INEG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_int();
         assert_eq!(val, -234556);
     }
@@ -212,10 +305,19 @@ mod tests {
     #[test]
     #[allow(non_snake_case)]
     fn test_LNEG() {
-        let frame = Frame::new(1, 2);
+        let method = Rc::new(Method::new(MemberInfo {
+            access_flags: 0u16,
+            name: "".to_string(),
+            name_index: 0u16,
+            descriptor_index: 0u16,
+            descriptor: "".to_string(),
+            attributes: vec![],
+        }));
+        let frame = Frame::new(method);
         let Frame {
             operand_stack,
             local_vars,
+            method,
         } = frame;
 
         let operand_stack = operand_stack.push_long(-54875845748435i64);
@@ -223,9 +325,12 @@ mod tests {
         let frame = Frame {
             operand_stack,
             local_vars,
+            method,
         };
-
-        let (ExecuteResult { frame, offset: _ }, _) = LNEG(CodeReader::new(&vec![]), frame);
+        let thread = Thread::new().push_frame(frame);
+        let (ExecuteResult { thread, offset: _ }, _) =
+            LNEG(CodeReader::new(Rc::new(vec![])), thread);
+        let (frame, _) = thread.pop_frame();
         let (val, _) = frame.operand_stack.pop_long();
         assert_eq!(val, 54875845748435i64);
     }
