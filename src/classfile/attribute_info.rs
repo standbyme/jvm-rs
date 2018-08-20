@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 #[derive(Debug)]
 pub struct ExceptionTableEntry {
     pub start_pc: u16,
@@ -26,7 +28,7 @@ pub enum AttributeInfo {
     Code {
         max_stack: u16,
         max_locals: u16,
-        code: Vec<u8>,
+        code: Rc<Vec<u8>>,
         exception_table: Vec<ExceptionTableEntry>,
         attributes: Vec<AttributeInfo>,
     },

@@ -12,6 +12,7 @@ use classfile::constant_info::ConstantInfo;
 use classfile::constant_pool::ConstantPool;
 use classfile::member_info::MemberInfo;
 use util::modified_utf8::from_modified_utf8;
+use std::rc::Rc;
 
 const CONSTANT_UTF8: u8 = 1;
 const CONSTANT_INTEGER: u8 = 3;
@@ -377,7 +378,7 @@ impl ClassReader for [u8] {
                     AttributeInfo::Code {
                         max_stack,
                         max_locals,
-                        code: code.to_vec(),
+                        code: Rc::new(code.to_vec()),
                         exception_table,
                         attributes,
                     },
