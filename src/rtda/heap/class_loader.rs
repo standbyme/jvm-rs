@@ -80,7 +80,7 @@ impl ClassLoader {
             let Acc {
                 next_instance_field_slot_id: instance_field_slot_id,
                 next_static_field_slot_id: static_field_slot_id,
-                mut static_vars,
+                static_vars,
                 constant_pool,
             } = acc;
             let slot_id_delta: usize = if field.is_long_or_double() { 2 } else { 1 };
