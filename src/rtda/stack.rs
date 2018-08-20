@@ -24,4 +24,8 @@ impl Stack {
         let frame = self.vec.pop().unwrap();
         (frame, self)
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.vec.is_empty()
+    }
 }

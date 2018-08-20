@@ -27,4 +27,8 @@ impl Thread {
         let thread = Thread { stack };
         (frame, thread)
     }
+
+    pub fn is_stack_empty(&self) -> bool {
+        self.stack.is_empty()
+    }
 }
