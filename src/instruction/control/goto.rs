@@ -1,5 +1,4 @@
 use instruction::instruction::ExecuteResult;
-use rtda::frame::Frame;
 use rtda::thread::Thread;
 use util::code_reader::CodeReader;
 

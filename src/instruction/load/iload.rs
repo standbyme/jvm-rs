@@ -24,6 +24,7 @@ pub fn ILOAD_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeR
     let (frame, thread) = thread.pop_frame();
 
     let frame = _iload(frame, 0);
+    let thread = thread.push_frame(frame);
     let execute_result = ExecuteResult { thread, offset: 0 };
     (execute_result, code_reader)
 }

@@ -14,7 +14,6 @@ use instruction::math::inc::*;
 use instruction::math::mul::*;
 use instruction::math::neg::*;
 use instruction::store::istore::*;
-use rtda::frame::Frame;
 use rtda::thread::Thread;
 use util::code_reader::CodeReader;
 
