@@ -12,19 +12,25 @@ pub struct Method {
 impl Method {
     pub fn new(member_info: MemberInfo) -> Method {
         let class_member = ClassMember::new(&member_info);
-        let code_attribute = member_info.code_attribute().unwrap();
+        let code_attribute = member_info.code_attribute();
         match code_attribute {
-            AttributeInfo::Code {
+            Some(AttributeInfo::Code {
                 max_stack,
                 max_locals,
                 code,
                 ..
-            } => Method {
+            }) => Method {
                 class_member,
                 max_stack: *max_stack as usize,
                 max_locals: *max_locals as usize,
                 //todo:fix here
                 code: code.to_vec(),
+            },
+            None => Method {
+                class_member,
+                max_stack: 0,
+                max_locals: 0,
+                code: Vec::new(),
             },
             _ => panic!(),
         }
