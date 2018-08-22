@@ -4,12 +4,12 @@ use jvm::classpath::classpath::parse;
 use jvm::instruction::instruction;
 use jvm::instruction::instruction::ExecuteResult;
 use jvm::rtda::frame::Frame;
+use jvm::rtda::heap::class::Class;
 use jvm::rtda::heap::class_loader::ClassLoader;
 use jvm::rtda::heap::method::Method;
 use jvm::rtda::thread::Thread;
 use jvm::shell::command::Command;
 use std::rc::Rc;
-use jvm::rtda::heap::class::Class;
 
 fn main() {
     let class_name = "src.test_data.MyObject";

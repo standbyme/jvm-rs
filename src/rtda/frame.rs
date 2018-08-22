@@ -33,14 +33,14 @@ impl Frame {
 
 #[cfg(test)]
 mod tests {
+    use classfile::constant_pool::ConstantPool;
     use classfile::member_info::MemberInfo;
     use rtda::frame::Frame;
+    use rtda::heap::class::Class;
     use rtda::heap::method::Method;
     use rtda::operand_stack::OperandStack;
     use rtda::vars::Vars;
     use std::rc::Rc;
-    use rtda::heap::class::Class;
-    use classfile::constant_pool::ConstantPool;
     use vec_map::VecMap;
 
     #[test]

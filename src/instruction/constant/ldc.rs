@@ -10,7 +10,8 @@ pub fn LDC(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReade
         operand_stack,
         local_vars,
         method,
-    class } = frame;
+        class
+    } = frame;
 
     let thread = thread.push_frame(frame);
     let execute_result = ExecuteResult { thread, offset: 0 };

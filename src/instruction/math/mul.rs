@@ -118,18 +118,18 @@ pub fn LMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[cfg(test)]
 mod test {
+    use classfile::constant_pool::ConstantPool;
     use classfile::member_info::MemberInfo;
     use instruction::instruction::ExecuteResult;
     use instruction::math::mul::*;
     use rtda::frame::Frame;
+    use rtda::heap::class::Class;
     use rtda::heap::method::Method;
     use rtda::thread::Thread;
+    use rtda::vars::Vars;
     use std::rc::Rc;
     use util::code_reader::CodeReader;
-    use rtda::heap::class::Class;
     use vec_map::VecMap;
-    use classfile::constant_pool::ConstantPool;
-    use rtda::vars::Vars;
 
     #[test]
     #[allow(non_snake_case)]

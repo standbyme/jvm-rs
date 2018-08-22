@@ -117,18 +117,18 @@ pub fn FADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[cfg(test)]
 mod tests {
+    use classfile::constant_pool::ConstantPool;
     use classfile::member_info::MemberInfo;
     use instruction::instruction::ExecuteResult;
     use instruction::math::add::*;
     use rtda::frame::Frame;
+    use rtda::heap::class::Class;
     use rtda::heap::method::Method;
     use rtda::thread::Thread;
+    use rtda::vars::Vars;
     use std::rc::Rc;
     use util::code_reader::CodeReader;
     use vec_map::VecMap;
-    use classfile::constant_pool::ConstantPool;
-    use rtda::vars::Vars;
-    use rtda::heap::class::Class;
 
     #[test]
     #[allow(non_snake_case)]

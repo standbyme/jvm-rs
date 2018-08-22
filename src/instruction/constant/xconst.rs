@@ -342,18 +342,18 @@ pub fn LCONST_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[cfg(test)]
 mod tests {
+    use classfile::constant_pool::ConstantPool;
     use classfile::member_info::MemberInfo;
     use instruction::constant::xconst::*;
     use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
+    use rtda::heap::class::Class;
     use rtda::heap::method::Method;
     use rtda::thread::Thread;
+    use rtda::vars::Vars;
     use std::rc::Rc;
     use util::code_reader::CodeReader;
-    use rtda::heap::class::Class;
-    use classfile::constant_pool::ConstantPool;
     use vec_map::VecMap;
-    use rtda::vars::Vars;
 
     #[test]
     #[allow(non_snake_case)]
