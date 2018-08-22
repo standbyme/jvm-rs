@@ -88,7 +88,8 @@ impl ClassLoader {
                 if field.is_static() {
                     let static_vars: Vars = if field.is_final() {
                         let constant_value_index = field.constant_value_index;
-                        if constant_value_index > 0 {
+                        if constant_value_index.is_some() {
+                            let constant_value_index = constant_value_index.unwrap();
                             match field.class_member.descriptor.as_str() {
                                 // todo: Complete  Z B C S I J D Ljava/lang/String
                                 "F" => {
@@ -101,7 +102,7 @@ impl ClassLoader {
                                 _ => panic!("TODO"),
                             }
                         } else {
-                            panic!("constant_value_index < 0");
+                            static_vars
                         }
                     } else {
                         static_vars

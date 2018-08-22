@@ -11,7 +11,7 @@ use jvm::shell::command::Command;
 use std::rc::Rc;
 
 fn main() {
-    let class_name = "src.test_data.GaussTest";
+    let class_name = "src.test_data.MyObject";
     let class_name = class_name.replace('.', "/");
     let command = Command {
         class_name,
