@@ -9,6 +9,7 @@ fn _fcmp(frame: Frame, flag: bool) -> (f32, f32, Frame) {
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (val2, operand_stack) = operand_stack.pop_float();
@@ -27,6 +28,7 @@ fn _fcmp(frame: Frame, flag: bool) -> (f32, f32, Frame) {
     };
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -58,16 +60,19 @@ pub fn FCMPL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRea
 
 #[cfg(test)]
 mod tests {
+    use classfile::constant_pool::ConstantPool;
     use classfile::member_info::MemberInfo;
     use instruction::comparison::fcmp::*;
     use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
+    use rtda::heap::class::Class;
     use rtda::heap::method::Method;
     use rtda::operand_stack::OperandStack;
     use rtda::thread::Thread;
     use rtda::vars::Vars;
     use std::rc::Rc;
     use util::code_reader::CodeReader;
+    use vec_map::VecMap;
 
     #[test]
     #[allow(non_snake_case)]
@@ -118,7 +123,21 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
         Frame {
+            class,
             local_vars: Vars::new(10),
             operand_stack: operand_stack,
             method,

@@ -8,10 +8,12 @@ fn _iload(frame: Frame, index: usize) -> Frame {
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
     let val = local_vars.get_int(index);
     let operand_stack = operand_stack.push_int(val);
     Frame {
+        class,
         operand_stack,
         local_vars,
         method,

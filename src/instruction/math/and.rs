@@ -11,6 +11,7 @@ pub fn IAND(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_int();
@@ -19,6 +20,7 @@ pub fn IAND(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
     let operand_stack = operand_stack.push_int(result);
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -36,6 +38,7 @@ pub fn LAND(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_long();
@@ -44,6 +47,7 @@ pub fn LAND(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
     let operand_stack = operand_stack.push_long(result);
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -63,6 +67,10 @@ mod tests {
     use rtda::thread::Thread;
     use std::rc::Rc;
     use util::code_reader::CodeReader;
+    use classfile::constant_pool::ConstantPool;
+    use vec_map::VecMap;
+    use rtda::heap::class::Class;
+    use rtda::vars::Vars;
 
     #[test]
     #[allow(non_snake_case)]
@@ -75,20 +83,35 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
-            method
+            method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(350);
         let operand_stack = operand_stack.push_int(678);
 
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
-            method
+            method,
         };
         let thread = Thread::new().push_frame(frame);
         let (ExecuteResult { thread, offset: _ }, _) =
@@ -109,20 +132,35 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
-            method
+            method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_long(12345678969);
         let operand_stack = operand_stack.push_long(2997924580);
 
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
-            method
+            method,
         };
         let thread = Thread::new().push_frame(frame);
         let (ExecuteResult { thread, offset: _ }, _) =

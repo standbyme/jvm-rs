@@ -8,10 +8,12 @@ fn _istore(frame: Frame, index: usize) -> Frame {
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
     let (val, operand_stack) = operand_stack.pop_int();
     let local_vars = local_vars.set_int(index, val);
     Frame {
+        class,
         operand_stack,
         local_vars,
         method,

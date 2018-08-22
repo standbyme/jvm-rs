@@ -17,11 +17,11 @@ impl Method {
         let code_attribute = member_info.code_attribute();
         match code_attribute {
             Some(AttributeInfo::Code {
-                     max_stack,
-                     max_locals,
-                     code,
-                     ..
-                 }) => Method {
+                max_stack,
+                max_locals,
+                code,
+                ..
+            }) => Method {
                 class_member,
                 max_stack: *max_stack as usize,
                 max_locals: *max_locals as usize,

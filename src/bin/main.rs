@@ -9,6 +9,7 @@ use jvm::rtda::heap::method::Method;
 use jvm::rtda::thread::Thread;
 use jvm::shell::command::Command;
 use std::rc::Rc;
+use jvm::rtda::heap::class::Class;
 
 fn main() {
     let class_name = "src.test_data.MyObject";
@@ -27,12 +28,12 @@ fn start_jvm(command: Command) {
     let class_loader = ClassLoader::new(class_path);
     let (main_class, _) = class_loader.load(command.class_name);
     let main_method = main_class.main_method();
-    interpret(main_method)
+    interpret(main_class, main_method)
 }
 
-fn interpret(method: Rc<Method>) {
+fn interpret(class: Rc<Class>, method: Rc<Method>) {
     let thread = Thread::new();
-    let frame = Frame::new(method);
+    let frame = Frame::new(class, method);
     let thread = thread.push_frame(frame);
     execute(thread);
 }

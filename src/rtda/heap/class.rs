@@ -4,6 +4,7 @@ use rtda::heap::method::Method;
 use rtda::vars::Vars;
 use std::rc::Rc;
 
+#[derive(Debug)]
 pub struct Class {
     pub access_flags: u16,
     pub name: String,

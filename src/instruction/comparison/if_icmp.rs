@@ -9,12 +9,14 @@ fn _icmpPop(frame: Frame) -> (i32, i32, Frame) {
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (val2, operand_stack) = operand_stack.pop_int();
     let (val1, operand_stack) = operand_stack.pop_int();
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -108,14 +110,18 @@ pub fn IF_ICMPLE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Cod
 
 #[cfg(test)]
 mod tests {
+    use classfile::constant_pool::ConstantPool;
     use classfile::member_info::MemberInfo;
     use instruction::comparison::if_icmp::*;
     use instruction::instruction::ExecuteResult;
     use rtda::frame::Frame;
+    use rtda::heap::class::Class;
     use rtda::heap::method::Method;
     use rtda::thread::Thread;
+    use rtda::vars::Vars;
     use std::rc::Rc;
     use util::code_reader::CodeReader;
+    use vec_map::VecMap;
 
     #[test]
     #[allow(non_snake_case)]
@@ -128,16 +134,32 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(1);
         let operand_stack = operand_stack.push_int(0);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -159,16 +181,33 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(1);
         let operand_stack = operand_stack.push_int(2);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -190,16 +229,32 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(1);
         let operand_stack = operand_stack.push_int(1);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -221,16 +276,33 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(0);
         let operand_stack = operand_stack.push_int(2);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -252,16 +324,31 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(-1);
         let operand_stack = operand_stack.push_int(-1);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -283,16 +370,31 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(0);
         let operand_stack = operand_stack.push_int(1);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -314,16 +416,31 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(0);
         let operand_stack = operand_stack.push_int(1);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -345,16 +462,31 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(-1);
         let operand_stack = operand_stack.push_int(-1);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -376,16 +508,31 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(1);
         let operand_stack = operand_stack.push_int(2);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -407,16 +554,31 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(0);
         let operand_stack = operand_stack.push_int(0);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -438,16 +600,31 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(0);
         let operand_stack = operand_stack.push_int(0);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -469,16 +646,31 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
             method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(2);
         let operand_stack = operand_stack.push_int(1);
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
             method,
@@ -488,5 +680,4 @@ mod tests {
             IF_ICMPLE(CodeReader::new(Rc::new(vec![1, 1])), thread);
         assert_eq!(offset, 0);
     }
-
 }

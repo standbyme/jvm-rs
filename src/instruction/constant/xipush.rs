@@ -12,6 +12,7 @@ pub fn BIPUSH(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRe
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (val, code_reader) = code_reader.read_i8();
@@ -19,6 +20,7 @@ pub fn BIPUSH(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRe
     let operand_stack = operand_stack.push_int(i as i32);
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,

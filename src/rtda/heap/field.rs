@@ -2,6 +2,7 @@ use classfile::attribute_info::AttributeInfo;
 use classfile::member_info::MemberInfo;
 use rtda::heap::class_member::ClassMember;
 
+#[derive(Debug)]
 pub struct Field {
     pub class_member: ClassMember,
     pub constant_value_index: Option<usize>,

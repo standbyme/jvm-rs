@@ -13,6 +13,7 @@ pub fn IINC(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (index, code_reader) = code_reader.read_u8();
@@ -25,6 +26,7 @@ pub fn IINC(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
     let local_vars = local_vars.set_int(index, val);
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,

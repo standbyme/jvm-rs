@@ -10,6 +10,7 @@ pub fn LCMP(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (val2, operand_stack) = operand_stack.pop_long();
@@ -24,6 +25,7 @@ pub fn LCMP(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
     };
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -45,6 +47,9 @@ mod tests {
     use rtda::vars::Vars;
     use std::rc::Rc;
     use util::code_reader::CodeReader;
+    use classfile::constant_pool::ConstantPool;
+    use rtda::heap::class::Class;
+    use vec_map::VecMap;
 
     #[test]
     #[allow(non_snake_case)]
@@ -94,7 +99,21 @@ mod tests {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
         Frame {
+            class,
             local_vars: Vars::new(10),
             operand_stack,
             method,

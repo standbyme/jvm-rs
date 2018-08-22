@@ -13,6 +13,7 @@ pub fn DMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_double();
@@ -21,6 +22,7 @@ pub fn DMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
     let operand_stack = operand_stack.push_double(result);
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -39,6 +41,7 @@ pub fn FMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_float();
@@ -47,6 +50,7 @@ pub fn FMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
     let operand_stack = operand_stack.push_float(result);
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -65,6 +69,7 @@ pub fn IMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_int();
@@ -73,6 +78,7 @@ pub fn IMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
     let operand_stack = operand_stack.push_int(result);
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -91,6 +97,7 @@ pub fn LMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
         operand_stack,
         local_vars,
         method,
+        class,
     } = frame;
 
     let (v2, operand_stack) = operand_stack.pop_long();
@@ -99,6 +106,7 @@ pub fn LMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
     let operand_stack = operand_stack.push_long(result);
 
     let frame = Frame {
+        class,
         operand_stack,
         local_vars,
         method,
@@ -110,14 +118,18 @@ pub fn LMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[cfg(test)]
 mod test {
+    use classfile::member_info::MemberInfo;
     use instruction::instruction::ExecuteResult;
     use instruction::math::mul::*;
     use rtda::frame::Frame;
+    use rtda::heap::method::Method;
     use rtda::thread::Thread;
     use std::rc::Rc;
     use util::code_reader::CodeReader;
-    use rtda::heap::method::Method;
-    use classfile::member_info::MemberInfo;
+    use rtda::heap::class::Class;
+    use vec_map::VecMap;
+    use classfile::constant_pool::ConstantPool;
+    use rtda::vars::Vars;
 
     #[test]
     #[allow(non_snake_case)]
@@ -130,20 +142,35 @@ mod test {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
-            method
+            method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_double(2.71828182845f64);
         let operand_stack = operand_stack.push_double(3.1415926535897926f64);
 
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
-            method
+            method,
         };
         let thread = Thread::new().push_frame(frame);
         let (ExecuteResult { thread, offset: _ }, _) =
@@ -164,20 +191,35 @@ mod test {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
-            method
+            method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_float(2.71828182845f32);
         let operand_stack = operand_stack.push_float(3.1415926535897926f32);
 
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
-            method
+            method,
         };
         let thread = Thread::new().push_frame(frame);
         let (ExecuteResult { thread, offset: _ }, _) =
@@ -198,20 +240,35 @@ mod test {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
-            method
+            method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_int(2);
         let operand_stack = operand_stack.push_int(3);
 
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
-            method
+            method,
         };
         let thread = Thread::new().push_frame(frame);
         let (ExecuteResult { thread, offset: _ }, _) =
@@ -232,20 +289,35 @@ mod test {
             descriptor: "".to_string(),
             attributes: vec![],
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         let Frame {
             operand_stack,
             local_vars,
-            method
+            method,
+            class,
         } = frame;
 
         let operand_stack = operand_stack.push_long(1234567890);
         let operand_stack = operand_stack.push_long(2997924580);
 
         let frame = Frame {
+            class,
             operand_stack,
             local_vars,
-            method
+            method,
         };
         let thread = Thread::new().push_frame(frame);
         let (ExecuteResult { thread, offset: _ }, _) =

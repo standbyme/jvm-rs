@@ -1,3 +1,4 @@
+use rtda::heap::class::Class;
 use rtda::heap::method::Method;
 use rtda::operand_stack::OperandStack;
 use rtda::vars::Vars;
@@ -8,10 +9,11 @@ pub struct Frame {
     pub local_vars: Vars,
     pub operand_stack: OperandStack,
     pub method: Rc<Method>,
+    pub class: Rc<Class>,
 }
 
 impl Frame {
-    pub fn new(method: Rc<Method>) -> Frame {
+    pub fn new(class: Rc<Class>, method: Rc<Method>) -> Frame {
         let Method {
             max_stack,
             max_locals,
@@ -21,6 +23,7 @@ impl Frame {
         let local_vars = Vars::new(max_locals);
         let operand_stack = OperandStack::new(max_stack);
         Frame {
+            class,
             local_vars,
             operand_stack,
             method,
@@ -36,6 +39,9 @@ mod tests {
     use rtda::operand_stack::OperandStack;
     use rtda::vars::Vars;
     use std::rc::Rc;
+    use rtda::heap::class::Class;
+    use classfile::constant_pool::ConstantPool;
+    use vec_map::VecMap;
 
     #[test]
     fn frame() {
@@ -47,7 +53,20 @@ mod tests {
             descriptor: "".to_string(),
             attributes: Vec::new(),
         }));
-        let frame = Frame::new(method);
+        let class = Rc::new(Class {
+            access_flags: 0u16,
+            name: "".to_string(),
+            constant_pool: ConstantPool {
+                vec_map: VecMap::new(),
+            },
+            fields: Vec::new(),
+            methods: Vec::new(),
+            super_class: None,
+            instance_slot_count: 0usize,
+            static_slot_count: 0usize,
+            static_vars: Vars::new(2),
+        });
+        let frame = Frame::new(class, method);
         local_vars(frame.local_vars);
         operand_stack(frame.operand_stack);
     }
