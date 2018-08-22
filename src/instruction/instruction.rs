@@ -16,6 +16,7 @@ use instruction::math::neg::*;
 use instruction::store::istore::*;
 use rtda::thread::Thread;
 use util::code_reader::CodeReader;
+use instruction::constant::ldc::LDC;
 
 pub struct ExecuteResult {
     pub thread: Thread,
@@ -45,6 +46,7 @@ pub fn execute(pc: usize, thread: Thread) -> (ExecuteResult, CodeReader) {
         0x0E => DCONST_0,
         0x0F => DCONST_1,
         0x10 => BIPUSH,
+        0x12 => LDC,
         0x1B => ILOAD_1,
         0x1C => ILOAD_2,
         0x3C => ISTORE_1,
