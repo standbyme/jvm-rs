@@ -3,6 +3,7 @@ use instruction::comparison::fcmp::*;
 use instruction::comparison::if_icmp::*;
 use instruction::comparison::ifcond::*;
 use instruction::comparison::lcmp::*;
+use instruction::constant::ldc::*;
 use instruction::constant::nop::NOP;
 use instruction::constant::xconst::*;
 use instruction::constant::xipush::*;
@@ -16,7 +17,6 @@ use instruction::math::neg::*;
 use instruction::store::istore::*;
 use rtda::thread::Thread;
 use util::code_reader::CodeReader;
-use instruction::constant::ldc::LDC;
 
 pub struct ExecuteResult {
     pub thread: Thread,
@@ -47,6 +47,7 @@ pub fn execute(pc: usize, thread: Thread) -> (ExecuteResult, CodeReader) {
         0x0F => DCONST_1,
         0x10 => BIPUSH,
         0x12 => LDC,
+        0x14 => LDC2_W,
         0x1B => ILOAD_1,
         0x1C => ILOAD_2,
         0x3C => ISTORE_1,
