@@ -34,4 +34,8 @@ impl ConstantPool {
         };
         self.get_utf8(*name_index as usize)
     }
+
+    // fn get_class_ref(&self, index: usize) -> &str {
+
+    // }
 }
