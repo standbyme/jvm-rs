@@ -12,7 +12,7 @@ use jvm::shell::command::Command;
 use std::rc::Rc;
 
 fn main() {
-    let class_name = "src.test_data.MyObject";
+    let class_name = "src.test_data.Kid";
     let class_name = class_name.replace('.', "/");
     let command = Command {
         class_name,
@@ -54,8 +54,8 @@ fn execute(thread: Thread) {
         };
         mut_thread = thread;
 
-        println!("pc: {}", pc);
-        println!("offset: {}", offset);
-        println!("mut_pc: {}", mut_pc);
+//        // println!("pc: {}", pc);
+//        // println!("offset: {}", offset);
+//        // println!("mut_pc: {}", mut_pc);
     }
 }

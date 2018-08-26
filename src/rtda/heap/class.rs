@@ -26,10 +26,10 @@ impl Class {
         self.get_method("main", "([Ljava/lang/String;)V", true)
     }
     fn get_method(&self, name: &str, descriptor: &str, is_static: bool) -> Rc<Method> {
-        println!(
-            "name {} descriptor {} is_static {}",
-            name, descriptor, is_static
-        );
+        // println!(
+        //     "name {} descriptor {} is_static {}",
+        //     name, descriptor, is_static
+        // );
         let reference = self.methods
             .iter()
             .find(|x| {

@@ -22,7 +22,7 @@ fn _istore(frame: Frame, index: usize) -> Frame {
 
 #[allow(non_snake_case)]
 pub fn ISTORE_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ISTORE_1");
+    // println!("ISTORE_1");
     let (frame, thread) = thread.pop_frame();
 
     let frame = _istore(frame, 1);
@@ -33,7 +33,7 @@ pub fn ISTORE_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn ISTORE_2(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ISTORE_2");
+    // println!("ISTORE_2");
     let (frame, thread) = thread.pop_frame();
 
     let frame = _istore(frame, 2);

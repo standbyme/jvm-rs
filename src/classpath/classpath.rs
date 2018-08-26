@@ -20,10 +20,10 @@ enum Entry {
 impl Entry {
     fn new(path: &str) -> Entry {
         if path.ends_with("*") {
-            //            println!("Entry::new Wildcard {}", path);
+            //            // println!("Entry::new Wildcard {}", path);
             let len = path.len();
             let base_path = &path[..len - 1];
-            //            println!("base_path {:?}", base_path);
+            //            // println!("base_path {:?}", base_path);
             let path_vec: Vec<PathBuf> = read_dir(base_path)
                 .unwrap()
                 .map(|x| x.unwrap())
@@ -34,16 +34,16 @@ impl Entry {
                         .unwrap_or(false)
                 })
                 .collect();
-            //            println!("path_vec {:?}", path_vec);
+            //            // println!("path_vec {:?}", path_vec);
 
             Entry::Wildcard { path_vec }
         } else if path.ends_with(".jar") {
-            //            println!("Entry::new Zip {}", path);
+            //            // println!("Entry::new Zip {}", path);
             Entry::Zip {
                 path: Path::new(path).to_owned(),
             }
         } else {
-            //            println!("Entry::new Dir {}", path);
+            //            // println!("Entry::new Dir {}", path);
             Entry::Dir {
                 path: Path::new(path).to_owned(),
             }
@@ -53,7 +53,7 @@ impl Entry {
     fn read_class(&self, class_file_name: &str) -> Result<Vec<u8>, io::Error> {
         match self {
             Entry::Dir { path } => {
-                //                println!("read class {} using Dir", class_file_name);
+                //                // println!("read class {} using Dir", class_file_name);
                 let filepath = Path::new(path).join(class_file_name);
                 let mut file = File::open(filepath)?;
                 let meta = file.metadata()?;
@@ -62,7 +62,7 @@ impl Entry {
                 Ok(buf)
             }
             Entry::Wildcard { path_vec } => {
-                //                println!("read class {} using Wildcard", class_file_name);
+                //                // println!("read class {} using Wildcard", class_file_name);
                 path_vec
                     .iter()
                     .map(|x| Entry::new(x.to_str().unwrap()))
@@ -71,7 +71,7 @@ impl Entry {
                     .unwrap_or(Err(Error::new(ErrorKind::Other, "Class not found")))
             }
             Entry::Zip { path } => {
-                //                println!("read class {} using Zip", class_file_name);
+                //                // println!("read class {} using Zip", class_file_name);
                 let file = File::open(path)?;
                 let mut zip = zip::ZipArchive::new(file)?;
                 let mut file = zip.by_name(&class_file_name)?;

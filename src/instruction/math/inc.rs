@@ -5,7 +5,7 @@ use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
 pub fn IINC(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IINC");
+    // println!("IINC");
 
     let (frame, thread) = thread.pop_frame();
 

@@ -26,7 +26,7 @@ fn _icmpPop(frame: Frame) -> (i32, i32, Frame) {
 
 #[allow(non_snake_case)]
 pub fn IF_ICMPGT(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPGT");
+    // println!("IF_ICMPGT");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -40,7 +40,7 @@ pub fn IF_ICMPGT(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Cod
 
 #[allow(non_snake_case)]
 pub fn IF_ICMPGE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPGE");
+    // println!("IF_ICMPGE");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -54,7 +54,7 @@ pub fn IF_ICMPGE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Cod
 
 #[allow(non_snake_case)]
 pub fn IF_ICMPEQ(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPEQ");
+    // println!("IF_ICMPEQ");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -68,7 +68,7 @@ pub fn IF_ICMPEQ(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Cod
 
 #[allow(non_snake_case)]
 pub fn IF_ICMPNE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPNE");
+    // println!("IF_ICMPNE");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -82,7 +82,7 @@ pub fn IF_ICMPNE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Cod
 
 #[allow(non_snake_case)]
 pub fn IF_ICMPLT(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPLT");
+    // println!("IF_ICMPLT");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -96,7 +96,7 @@ pub fn IF_ICMPLT(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Cod
 
 #[allow(non_snake_case)]
 pub fn IF_ICMPLE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IF_ICMPLE");
+    // println!("IF_ICMPLE");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();

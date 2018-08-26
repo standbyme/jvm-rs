@@ -38,7 +38,7 @@ fn _dcmp(frame: Frame, flag: bool) -> (f64, f64, Frame) {
 
 #[allow(non_snake_case)]
 pub fn DCMPG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("DCMPG");
+    // println!("DCMPG");
 
     let (frame, thread) = thread.pop_frame();
     let (_, _, frame) = _dcmp(frame, true);
@@ -49,7 +49,7 @@ pub fn DCMPG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRea
 
 #[allow(non_snake_case)]
 pub fn DCMPL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("DCMPG");
+    // println!("DCMPG");
 
     let (frame, thread) = thread.pop_frame();
     let (_, _, frame) = _dcmp(frame, false);

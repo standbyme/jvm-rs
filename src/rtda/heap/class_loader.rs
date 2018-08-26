@@ -33,7 +33,7 @@ impl ClassLoader {
     }
 
     pub fn load(self, name: String) -> (Rc<Class>, ClassLoader) {
-        println!("load {}", &name);
+        // println!("load {}", &name);
         if self.class_map.contains_key(&name) {
             let class = Rc::clone(self.class_map.get(&name).unwrap());
             (class, self)

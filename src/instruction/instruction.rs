@@ -4,6 +4,7 @@ use instruction::comparison::if_icmp::*;
 use instruction::comparison::ifcond::*;
 use instruction::comparison::lcmp::*;
 use instruction::constant::nop::NOP;
+use instruction::reference::invokevirtual::INVOKE_VIRTUAL;
 use instruction::constant::xconst::*;
 use instruction::constant::xipush::*;
 use instruction::control::goto::*;
@@ -16,6 +17,7 @@ use instruction::math::neg::*;
 use instruction::store::istore::*;
 use rtda::thread::Thread;
 use util::code_reader::CodeReader;
+use instruction::control::xreturn::RETURN;
 
 pub struct ExecuteResult {
     pub thread: Thread,
@@ -79,8 +81,12 @@ pub fn execute(pc: usize, thread: Thread) -> (ExecuteResult, CodeReader) {
         0xA3 => IF_ICMPGT,
         0xA4 => IF_ICMPLE,
         0xA7 => GOTO,
+        //todo
+        0xB1 => RETURN,
+        0xB2 => NOP,
+        0xB6 => INVOKE_VIRTUAL,
         _ => {
-            println!("{:?}", frame);
+            // println!("{:?}", frame);
             panic!("Unsupported opcode : {:X}", opcode)
         }
     };

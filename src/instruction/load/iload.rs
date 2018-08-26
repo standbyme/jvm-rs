@@ -22,7 +22,7 @@ fn _iload(frame: Frame, index: usize) -> Frame {
 
 #[allow(non_snake_case)]
 pub fn ILOAD_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ILOAD_0");
+    // println!("ILOAD_0");
     let (frame, thread) = thread.pop_frame();
 
     let frame = _iload(frame, 0);
@@ -33,7 +33,7 @@ pub fn ILOAD_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeR
 
 #[allow(non_snake_case)]
 pub fn ILOAD_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ILOAD_1");
+    // println!("ILOAD_1");
     let (frame, thread) = thread.pop_frame();
 
     let frame = _iload(frame, 1);
@@ -44,7 +44,7 @@ pub fn ILOAD_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeR
 
 #[allow(non_snake_case)]
 pub fn ILOAD_2(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ILOAD_2");
+    // println!("ILOAD_2");
     let (frame, thread) = thread.pop_frame();
 
     let frame = _iload(frame, 2);

@@ -23,7 +23,7 @@ fn _ifcond(frame: Frame) -> (i32, Frame) {
 
 #[allow(non_snake_case)]
 pub fn IFEQ(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IFEQ");
+    // println!("IFEQ");
     let (offset, code_reader) = code_reader.read_i16();
     let (frame, thread) = thread.pop_frame();
 
@@ -36,7 +36,7 @@ pub fn IFEQ(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn IFNE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IFNE");
+    // println!("IFNE");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -50,7 +50,7 @@ pub fn IFNE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn IFLT(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IFLT");
+    // println!("IFLT");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -64,7 +64,7 @@ pub fn IFLT(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn IFGE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IFGE");
+    // println!("IFGE");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -78,7 +78,7 @@ pub fn IFGE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn IFGT(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IFGT");
+    // println!("IFGT");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();
@@ -92,7 +92,7 @@ pub fn IFGT(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn IFLE(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IFLE");
+    // println!("IFLE");
     let (offset, code_reader) = code_reader.read_i16();
 
     let (frame, thread) = thread.pop_frame();

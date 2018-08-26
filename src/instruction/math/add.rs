@@ -5,7 +5,7 @@ use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
 pub fn IADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IADD");
+    // println!("IADD");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -33,7 +33,7 @@ pub fn IADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn DADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("DADD");
+    // println!("DADD");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -61,7 +61,7 @@ pub fn DADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn LADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("LADD");
+    // println!("LADD");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -89,7 +89,7 @@ pub fn LADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn FADD(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("FADD");
+    // println!("FADD");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {

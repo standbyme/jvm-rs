@@ -38,7 +38,7 @@ fn _fcmp(frame: Frame, flag: bool) -> (f32, f32, Frame) {
 
 #[allow(non_snake_case)]
 pub fn FCMPG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("FCMPG");
+    // println!("FCMPG");
 
     let (frame, thread) = thread.pop_frame();
     let (_, _, frame) = _fcmp(frame, true);
@@ -49,7 +49,7 @@ pub fn FCMPG(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRea
 
 #[allow(non_snake_case)]
 pub fn FCMPL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("FCMPL");
+    // println!("FCMPL");
 
     let (frame, thread) = thread.pop_frame();
     let (_, _, frame) = _fcmp(frame, false);

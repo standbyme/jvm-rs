@@ -5,7 +5,7 @@ use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
 pub fn BIPUSH(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("BIPUSH");
+    // println!("BIPUSH");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {

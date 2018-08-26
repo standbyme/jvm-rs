@@ -5,7 +5,7 @@ use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
 pub fn DCONST_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("DCONST_0");
+    // println!("DCONST_0");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -29,7 +29,7 @@ pub fn DCONST_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn DCONST_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("DCONST_1");
+    // println!("DCONST_1");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -53,7 +53,7 @@ pub fn DCONST_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn FCONST_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("FCONST_0");
+    // println!("FCONST_0");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -77,7 +77,7 @@ pub fn FCONST_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn FCONST_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("FCONST_1");
+    // println!("FCONST_1");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -101,7 +101,7 @@ pub fn FCONST_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn FCONST_2(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("FCONST_2");
+    // println!("FCONST_2");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -125,7 +125,7 @@ pub fn FCONST_2(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn ICONST_M1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ICONST_M1");
+    // println!("ICONST_M1");
 
     let (frame, thread) = thread.pop_frame();
 
@@ -150,7 +150,7 @@ pub fn ICONST_M1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Cod
 
 #[allow(non_snake_case)]
 pub fn ICONST_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ICONST_0");
+    // println!("ICONST_0");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -174,7 +174,7 @@ pub fn ICONST_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn ICONST_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ICONST_1");
+    // println!("ICONST_1");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -198,7 +198,7 @@ pub fn ICONST_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn ICONST_2(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ICONST_2");
+    // println!("ICONST_2");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -222,7 +222,7 @@ pub fn ICONST_2(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn ICONST_3(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ICONST_3");
+    // println!("ICONST_3");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -246,7 +246,7 @@ pub fn ICONST_3(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn ICONST_4(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ICONST_4");
+    // println!("ICONST_4");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -270,7 +270,7 @@ pub fn ICONST_4(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn ICONST_5(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("ICONST_5");
+    // println!("ICONST_5");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -294,7 +294,7 @@ pub fn ICONST_5(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn LCONST_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("LCONST_0");
+    // println!("LCONST_0");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -318,7 +318,7 @@ pub fn LCONST_0(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, Code
 
 #[allow(non_snake_case)]
 pub fn LCONST_1(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("LCONST_1");
+    // println!("LCONST_1");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {

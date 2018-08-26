@@ -5,7 +5,7 @@ use util::code_reader::CodeReader;
 
 #[allow(non_snake_case)]
 pub fn DMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("DMUL");
+    // println!("DMUL");
 
     let (frame, thread) = thread.pop_frame();
 
@@ -34,7 +34,7 @@ pub fn DMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn FMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("FMUL");
+    // println!("FMUL");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -62,7 +62,7 @@ pub fn FMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn IMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("IMUL");
+    // println!("IMUL");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
@@ -90,7 +90,7 @@ pub fn IMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeRead
 
 #[allow(non_snake_case)]
 pub fn LMUL(code_reader: CodeReader, thread: Thread) -> (ExecuteResult, CodeReader) {
-    println!("LMUL");
+    // println!("LMUL");
     let (frame, thread) = thread.pop_frame();
 
     let Frame {
