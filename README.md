@@ -13,7 +13,7 @@ Strive to achieve
 - Minimal Mutable
 - Functional Programming
 
-Now it is able to parse ClassFile and it's very easy to understand and follow.
+Now it support **Arithmetic Operation, Control Flow and println function call**. It's very easy to understand and follow.
 
 Welcome Star : )
 
