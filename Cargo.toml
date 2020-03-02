@@ -6,4 +6,4 @@ authors = ["StandbyMe <stand-by-me@mail.com>"]
 [dependencies]
 byteorder = "1"
 vec_map = "0.8.1"
-zip = "0.5.2"
+zip = "0.5.5"
